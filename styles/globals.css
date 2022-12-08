@@ -1,3 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* darker-grotesque-500 - latin */
+@font-face {
+  font-family: 'Darker Grotesque';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/fonts/darker-grotesque-v7-latin-500.eot');
+  src: local(''),
+    url('/fonts/darker-grotesque-v7-latin-500.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/darker-grotesque-v7-latin-500.woff2') format('woff2'),
+    url('/fonts/darker-grotesque-v7-latin-500.woff') format('woff'),
+    url('/fonts/darker-grotesque-v7-latin-500.ttf') format('truetype'),
+    url('/fonts/darker-grotesque-v7-latin-500.svg#DarkerGrotesque') format('svg');
+}
+
+/* roboto-300 - latin */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  src: url('/fonts/roboto-v30-latin-300.eot');
+  src: local(''),
+    url('/fonts/roboto-v30-latin-300.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/roboto-v30-latin-300.woff2') format('woff2'),
+    url('/fonts/roboto-v30-latin-300.woff') format('woff'),
+    url('/fonts/roboto-v30-latin-300.ttf') format('truetype'),
+    url('/fonts/roboto-v30-latin-300.svg#Roboto') format('svg');
+}
+
+/* asap-600 - latin */
+@font-face {
+  font-family: 'Asap';
+  font-style: normal;
+  font-weight: 600;
+  src: url('/fonts/asap-v26-latin-600.eot');
+  src: local(''),
+    url('/fonts/asap-v26-latin-600.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/asap-v26-latin-600.woff2') format('woff2'),
+    url('/fonts/asap-v26-latin-600.woff') format('woff'),
+    url('/fonts/asap-v26-latin-600.ttf') format('truetype'),
+    url('/fonts/asap-v26-latin-600.svg#Asap') format('svg');
+}
+
 html,
 body {
   padding: 0;
@@ -15,12 +61,167 @@ a {
   box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+@media (max-width: 1024px) {
+  .navbar {
+    position: absolute;
+    right: 0;
+    padding: 0;
+    width: 100%;
+    z-index: 10;
+    overflow: hidden;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    background-color: #fff;
+    top: 4rem;
+
+    padding-top: 0;
+    height: 0;
+    transition: height .3s, padding-top .3s, top .3s;
   }
-  body {
-    color: white;
-    background: black;
+
+  .navbar.open {
+    height: 11em;
+    padding-block: 10px;
+    z-index: 10;
+  }
+}
+
+/* Hamburguer menu */
+
+.btn_one {
+  width: 1.5em;
+  height: 1.5em;
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.btn_one span {
+  display: block;
+  width: 100%;
+  box-shadow: 0 0px 10px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  height: 2px;
+  background: #404946;
+  transition: all .3s;
+  position: relative;
+}
+
+.btn_one span+span {
+  margin-top: 5px;
+}
+
+.btn_one.open span:nth-child(1) {
+  animation: ease .6s center-to-top forwards;
+}
+
+.btn_one.not_open span:nth-child(1) {
+  animation: ease .6s top-to-center forwards;
+}
+
+.btn_one.open span:nth-child(2) {
+  animation: ease .6s scaled forwards;
+}
+
+.btn_one.not_open span:nth-child(2) {
+  animation: ease .6s scaled-2 forwards;
+}
+
+.btn_one.open span:nth-child(3) {
+  animation: ease .6s center-to-bottom forwards;
+}
+
+.btn_one.not_open span:nth-child(3) {
+  animation: ease .6s bottom-to-center forwards;
+}
+
+@keyframes center-to-top {
+  0% {
+    top: 0;
+    transform: rotate(0);
+  }
+
+  50% {
+    top: 7px;
+    transform: rotate(0);
+  }
+
+  100% {
+    top: 7px;
+    transform: rotate(45deg);
+  }
+}
+
+@keyframes top-to-center {
+  0% {
+    top: 7px;
+    transform: rotate(45deg);
+  }
+
+  50% {
+    top: 7px;
+    transform: rotate(0deg);
+  }
+
+  100% {
+    top: 0;
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes center-to-bottom {
+  0% {
+    bottom: 0;
+    transform: rotate(0);
+  }
+
+  50% {
+    bottom: 7px;
+    transform: rotate(0);
+  }
+
+  100% {
+    bottom: 7px;
+    transform: rotate(135deg);
+  }
+}
+
+@keyframes bottom-to-center {
+  0% {
+    bottom: 7px;
+    transform: rotate(135deg);
+  }
+
+  50% {
+    bottom: 7px;
+    transform: rotate(0);
+  }
+
+  100% {
+    bottom: 0;
+    transform: rotate(0);
+  }
+}
+
+@keyframes scaled {
+  50% {
+    transform: scale(0);
+  }
+
+  100% {
+    transform: scale(0);
+  }
+}
+
+@keyframes scaled-2 {
+  0% {
+    transform: scale(0);
+  }
+
+  50% {
+    transform: scale(0);
+  }
+
+  100% {
+    transform: scale(1);
   }
 }
