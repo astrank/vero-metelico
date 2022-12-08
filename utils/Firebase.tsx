@@ -12,9 +12,5 @@ const prod = {
 };
 
 export function initializeFirebase() {
-    if (!getApps().length) {
-        return initializeApp(prod);
-    } else {
-        return getApps()[0]
-    }
+    return initializeApp(prod);
 }
