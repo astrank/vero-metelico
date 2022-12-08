@@ -25,19 +25,18 @@ const Obra: NextPage<ObraProps> = ({ posts }) => {
 
             <div className="flex flex-col gap-8 text-primary-900 mx-4 my-12 lg:mx-44 ">
                 <div className="flex gap-6">
-                    <button className="bg-secondary-400 font-darker_grotesque text-md px-5 lg:text-xl md:px-6 py-2">Cuentos</button>
-                    <button className="bg-secondary-400 font-darker_grotesque text-md px-5 lg:text-xl md:px-6 py-2">Reflexiones</button>
-                    <button className="bg-secondary-400 font-darker_grotesque text-md px-5 lg:text-xl md:px-6 py-2">Entrar</button>
+                    <button className="bg-secondary-400 font-darker_grotesque text-md font-bold px-5 lg:text-xl md:px-6 py-2 hover:bg-secondary-200">Cuentos</button>
+                    <button className="bg-secondary-400 font-darker_grotesque text-md px-5 lg:text-xl md:px-6 py-2 hover:bg-secondary-200">Reflexiones</button>
                 </div>
                 <div className="flex flex-col gap-4 my-6">
                     {posts && posts.length > 0 && 
                         posts.map((post, i) => (
-                            <div key={i} className="flex flex-col gap-4">
+                            <div key={i} className="flex flex-col gap-6">
                                 <Link href={`/obra/${post.slug}`} className="self-start">
-                                    <h1 className="font-asap text-2xl">{post.title}</h1>
+                                    <h2 className="font-asap text-3xl">{post.title}</h2>
                                 </Link>
                                 <Link href={`/obra/${post.slug}`}>
-                                    <p className="font-roboto text:md md:text-lg text-primary-700 leading-8">
+                                    <p className="font-roboto text:md md:text-md text-primary-700 leading-8">
                                         {post.content
                                             .split(" ")
                                             .slice(0, 35)

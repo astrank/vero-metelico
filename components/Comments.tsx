@@ -66,7 +66,7 @@ const Comments = ({ post }: CommentsProps) => {
     return (
         <div className='mt-20 mb-10 text-primary-900'>
             <span className='mt-8 font-bold'>Comentarios ({comments?.length})</span>
-            <div className='flex flex-col gap-4 my-4'>
+            <div className='flex flex-col gap-6 my-6'>
                 <textarea 
                     className='border border-primary-900 py-2 px-4 focus:outline-none' 
                     onChange={(e) => writeNewComment(e.target.value)} 
@@ -82,7 +82,7 @@ const Comments = ({ post }: CommentsProps) => {
                         </Dialog.Panel>
                     </div>
                 </Dialog>
-                <button className='bg-secondary-400 font-darker_grotesque text-md px-5 lg:text-xl md:px-6 py-2 self-end' onClick={() => postComment(newComment)} disabled={!user || newComment.length < 1}>Comment</button>
+                <button className='bg-secondary-400 font-darker_grotesque text-md px-5 lg:text-xl md:px-6 py-2 self-end hover:bg-secondary-200' onClick={() => postComment(newComment)} disabled={!user || newComment.length < 1}>Comment</button>
             </div>
             <div className="">
                 {comments && comments.length > 0 &&

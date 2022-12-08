@@ -34,7 +34,7 @@ export default function Obra() {
                         <p className="font-roboto md:text-lg text-primary-700 leading-8">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi at hic magni ipsa facilis accusamus maxime. Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima consectetur nostrum porro doloribus quis expedita dolorem, ab, veritatis dolores...</p>
                     </a>
                 </div>
-                    <button className="self-end bg-secondary-400 font-darker_grotesque text-md px-5 lg:text-xl md:px-6 py-2">Cuentos</button>
+                    <button className="self-end bg-secondary-400 font-darker_grotesque text-md px-5 lg:text-xl md:px-6 py-2 hover:bg-secondary-200">Cuentos</button>
 
             </div>
 

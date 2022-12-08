@@ -31,7 +31,7 @@ const Obra: NextPage<ObraProps> = ({ post }) => {
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor" className="h-3">
                         <path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 278.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/>
                     </svg>
-                    <span className="mb-1">Volver a mi obra</span>
+                    <span className="mb-1">Volver a Obra</span>
                 </Link>
                 <div className="flex flex-col gap-10 my-6">
                     <h1 className="font-asap text-3xl">{post.title}</h1>

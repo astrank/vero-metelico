@@ -13,7 +13,9 @@ module.exports = {
                 "primary-700": "#63726D",
                 "primary-800": "#404946",
                 "primary-900": "#38403D",
-                "secondary-400": "#D5B6A6",
+                "secondary-200": "#EDD7CC",
+                "secondary-400": "#E2C4B5",
+                "secondary-600": "#d5b6a6",
             },
             fontSize: {
                 "1xl": ["1.3rem", "1.8rem"],
