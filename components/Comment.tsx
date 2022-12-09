@@ -68,7 +68,7 @@ const CommentComponent = ({ comment, replies, user, isAdmin, deleteComment, like
 
             {replies && replies.length > 0 && showingReplies &&
                 replies.map(c => (
-                    <div className="ml-6">
+                    <div className="ml-6" key={c.id}>
                         <CommentStructure comment={c} likeComment={likeComment} deleteComment={deleteComment} />
                     </div>
                 ))}
