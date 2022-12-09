@@ -1,10 +1,15 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { useAuth } from "../utils/Auth";
+import { Dialog } from '@headlessui/react'
+import Login from "./Login"
 
 export default function Header() {
     const [isNavToggled, toggleNav] = useState(false);
     const router = useRouter();
+    const { user, logout } = useAuth();
+    const [isOpen, setIsOpen] = useState<boolean>(false)
 
     return (
         <header
@@ -85,19 +90,11 @@ export default function Header() {
                     >
                         <li>Contacto</li>
                     </Link>
+                    {user
+                        ? <button className="hover:text-primary-700 self-start" onClick={() => logout()}>Salir</button> 
+                        : <button className="hover:text-primary-700 self-start" onClick={() => setIsOpen(true)}>Entrar</button>}
                 </ul>
             </nav>
-            <button
-                className="hamburger-menu lg:hidden"
-                onClick={() => toggleNav(!isNavToggled)}
-            >
-                <span
-                    aria-hidden="true"
-                    className={`${
-                        isNavToggled ? "clicked" : ""
-                    } bg-primary after:bg-primary before:bg-primary`}
-                ></span>
-            </button>
             <button
                 className={`btn_one ${
                     isNavToggled ? "open" : "not_open"
@@ -108,6 +105,17 @@ export default function Header() {
                 <span></span>
                 <span></span>
             </button>
+
+            <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
+                {/* Overlay */}
+                <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+                
+                <div className="fixed inset-0 flex items-center justify-center p-4">
+                    <Dialog.Panel className="mx-auto bg-white p-14">
+                        <Login />
+                    </Dialog.Panel>
+                </div>
+            </Dialog>
         </header>
     );
 }

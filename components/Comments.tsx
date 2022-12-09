@@ -40,8 +40,13 @@ const Comments = ({ post }: CommentsProps) => {
                 comment: comment,
                 post: `${post}`,
                 publishDate: Date.now(),
-                likes: []
+                likes: [],
+                reply: false,
+                parent: false,
+                replies: [],
             });
+
+            writeNewComment("");
         } catch (e) {
             console.error("Error adding document: ", e);
         }
@@ -84,17 +89,20 @@ const Comments = ({ post }: CommentsProps) => {
                 </Dialog>
                 <button className='bg-secondary-400 font-darker_grotesque text-md px-5 lg:text-xl md:px-6 py-2 self-end hover:bg-secondary-200' onClick={() => postComment(newComment)} disabled={!user || newComment.length < 1}>Comment</button>
             </div>
-            <div className="">
+            <div className="flex flex-col gap-6">
                 {comments && comments.length > 0 &&
-                    comments.map(comment => (
-                        <CommentComponent 
-                            key={comment.id}
-                            comment={comment} 
-                            user={user} 
-                            isAdmin={isAdmin} 
-                            deleteComment={deleteComment}
-                            likeComment={likeComment} />
-                ))}
+                    comments
+                        .sort((a,b) => (a.publishDate > b.publishDate) ? 1 : ((b.publishDate > a.publishDate) ? -1 : 0))
+                        .map(comment => !comment.reply && (
+                            <CommentComponent
+                                key={comment.id}
+                                comment={comment}
+                                replies={comments.filter(c => c.reply && c.parent === comment.id) || []}
+                                user={user}
+                                isAdmin={isAdmin}
+                                deleteComment={deleteComment}
+                                likeComment={likeComment} />
+                            ))}
             </div>
         </div>
     )

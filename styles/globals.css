@@ -71,7 +71,7 @@ a {
     overflow: hidden;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     background-color: #fff;
-    top: 4rem;
+    top: 5rem;
 
     padding-top: 0;
     height: 0;
@@ -79,7 +79,7 @@ a {
   }
 
   .navbar.open {
-    height: 11em;
+    height: 13em;
     padding-block: 10px;
     z-index: 10;
   }

@@ -5,5 +5,8 @@ export type Comment = {
     post: string,
     comment: string,
     publishDate: string,
-    likes: string[]
+    likes: string[],
+    reply: boolean,
+    parent: boolean | string,
+    replies: string[],
 }
