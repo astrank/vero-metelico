@@ -3,7 +3,7 @@ module.exports = {
     local_backend: true,
     backend: {
         name: "git-gateway",
-        branch: "master",
+        branch: "main",
         squash_merges: true,
     },
     locale: "es",
