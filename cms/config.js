@@ -19,7 +19,12 @@ module.exports = {
             format: "json",
             fields: [
                 { label: "Titulo", name: "title", widget: "string" },
-                { label: "Slug", name: "slug", widget: "string" },
+                {
+                    label: "Slug",
+                    name: "slug",
+                    widget: "string",
+                    hint: "El slug es un fragmento de texto unico separado por guiones que se va a usar en link para identificar esta pagina. 'primer-cuento' es el slug de https://veronicametelico.com/obra/primer-cuento",
+                },
                 {
                     label: "Autor",
                     name: "author",
