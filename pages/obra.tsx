@@ -3,13 +3,22 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Link from "next/link";
 import { Post } from "../types/Post";
+import { Category } from "../types/Category";
 import { NextPage } from "next";
+import { useEffect, useState } from "react";
 
 type ObraProps = {
-    posts: Post[]
+    posts: Post[],
+    categories: Category[],
 }
 
-const Obra: NextPage<ObraProps> = ({ posts }) => {
+const Obra: NextPage<ObraProps> = ({ posts, categories }) => {
+    const [visiblePosts, editPosts] = useState<Post[]>(posts);
+
+    useEffect(() => {
+        console.log(posts[0].category === categories[1].name)
+    }, [])
+
     return (
         <div className="min-h-screen flex flex-col justify-between">
             <Head>
@@ -25,18 +34,31 @@ const Obra: NextPage<ObraProps> = ({ posts }) => {
 
             <div className="flex flex-col gap-8 text-primary-900 mx-4 my-12 lg:mx-44 ">
                 <div className="flex gap-6">
-                    <button className="bg-secondary-400 font-darker_grotesque text-md font-bold px-5 lg:text-xl md:px-6 py-2 hover:bg-secondary-200">Cuentos</button>
-                    <button className="bg-secondary-400 font-darker_grotesque text-md px-5 lg:text-xl md:px-6 py-2 hover:bg-secondary-200">Reflexiones</button>
+                    <button 
+                        key="All"
+                        onClick={() => editPosts(posts)}
+                        className="bg-secondary-400 font-darker_grotesque text-md font-bold px-5 lg:text-xl md:px-6 py-2 hover:bg-secondary-200">
+                            Todas
+                    </button>
+                    {categories && categories.length > 0 &&
+                        categories.map(category => (
+                            <button 
+                                key={category.name}
+                                onClick={() => editPosts(posts.filter(post => post.category === category.name))}
+                                className="bg-secondary-400 font-darker_grotesque text-md font-bold px-5 lg:text-xl md:px-6 py-2 hover:bg-secondary-200">
+                                    {category.name}
+                            </button>
+                        ))}
                 </div>
-                <div className="flex flex-col gap-4 my-6">
-                    {posts && posts.length > 0 && 
-                        posts.map((post, i) => (
-                            <div key={i} className="flex flex-col gap-6">
+                <div className="flex flex-col gap-10 my-6">
+                    {visiblePosts && visiblePosts.length > 0 && 
+                        visiblePosts.map((post, i) => (
+                            <div key={i} className="flex flex-col gap-3">
                                 <Link href={`/obra/${post.slug}`} className="self-start">
-                                    <h2 className="font-asap text-3xl">{post.title}</h2>
+                                    <h2 className="font-asap text-2xl">{post.title}</h2>
                                 </Link>
                                 <Link href={`/obra/${post.slug}`}>
-                                    <p className="font-roboto text:md md:text-md text-primary-700 leading-8">
+                                    <p className="font-roboto text-md text-primary-700 leading-8">
                                         {post.content
                                             .split(" ")
                                             .slice(0, 35)
@@ -57,9 +79,12 @@ export const getStaticProps = async () => {
         (res) => res.default
     );
 
+    const categories = await import("../public/data/categories.json").then(
+        (res) => res.default
+    );
+
     return {
-        props: { posts },
-        //revalidate: 60,
+        props: { posts, categories },
     };
 };
 

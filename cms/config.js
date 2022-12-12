@@ -23,7 +23,7 @@ module.exports = {
                     label: "Slug",
                     name: "slug",
                     widget: "string",
-                    hint: "El slug es un fragmento de texto unico separado por guiones que se va a usar en link para identificar esta pagina. 'primer-cuento' es el slug de https://veronicametelico.com/obra/primer-cuento",
+                    hint: "El slug es un fragmento de texto unico separado por guiones que va a ser usado en el URL para identificar esta página. 'primer-cuento' es el slug de veronicametelico.com/obra/primer-cuento",
                 },
                 {
                     label: "Autor",

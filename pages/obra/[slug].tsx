@@ -16,7 +16,7 @@ const Obra: NextPage<ObraProps> = ({ post }) => {
     return (
         <div className="min-h-screen">
             <Head>
-                <title>Obra | Verónica Metélico</title>
+                <title>{`${post.title} | Verónica Metélico`}</title>
                 <meta
                     name="description"
                     content="Cuentos y Reflexiones | Verónica Metélico"

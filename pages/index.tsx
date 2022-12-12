@@ -20,10 +20,9 @@ const Home: NextPage = () => {
                     <Image
                         src="/veronica-metelico1.jpg"
                         fill
-                        objectPosition="top"
-                        objectFit="cover"
                         priority
                         alt="Imagen de Verónica"
+                        className="object-cover object-top"
                     />
                 </div>
                 <div className="flex flex-col justify-between items-center m-6">
