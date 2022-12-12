@@ -8,10 +8,10 @@ import { Dialog } from '@headlessui/react'
 import Dialoga from "./Login"
 
 type CommentsProps = {
-    post: string;
+    slug: string;
 }
 
-const Comments = ({ post }: CommentsProps) => {
+const Comments = ({ slug }: CommentsProps) => {
     const app = initializeFirebase();
     const db = getFirestore(app);
     const { user, isAdmin } = useAuth();
@@ -22,7 +22,7 @@ const Comments = ({ post }: CommentsProps) => {
 
     // Get all comments of post
     useEffect(() => {
-        const q = query(collection(db, "posts", post, "comments"));
+        const q = query(collection(db, "posts", slug, "comments"));
         onSnapshot(q, (commentsQuery) => {
             setComments(commentsQuery.docs.map((c) => {
                 let comment = c.data();
@@ -34,11 +34,11 @@ const Comments = ({ post }: CommentsProps) => {
 
     const postComment = async (comment: string) => {
         try {
-            const docRef = await addDoc(collection(db, "posts", post, "comments"), {
+            const docRef = await addDoc(collection(db, "posts", slug, "comments"), {
                 userId: user.uid,
                 author: user.displayName,
                 comment: comment,
-                post: `${post}`,
+                post: `${slug}`,
                 publishDate: Date.now(),
                 likes: [],
                 reply: false,
@@ -53,16 +53,16 @@ const Comments = ({ post }: CommentsProps) => {
     };
 
     const deleteComment = async (id: string) => {
-        await deleteDoc(doc(db, "posts", post, "comments", id))
+        await deleteDoc(doc(db, "posts", slug, "comments", id))
     };
 
     const likeComment = async (comment: Comment) => {
         if(!comment.likes.includes(user.uid)) {
-            await updateDoc(doc(db, "posts", post, "comments", comment.id), {
+            await updateDoc(doc(db, "posts", slug, "comments", comment.id), {
                 likes: arrayUnion(user.uid)
             });
         } else {
-            await updateDoc(doc(db, "posts", post, "comments", comment.id), {
+            await updateDoc(doc(db, "posts", slug, "comments", comment.id), {
                 likes: arrayRemove(user.uid)
             });
         }

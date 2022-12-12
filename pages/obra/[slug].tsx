@@ -39,7 +39,7 @@ const Obra: NextPage<ObraProps> = ({ post }) => {
                         {post.content}
                     </Markdown>
                 </div>
-                <Comments post="post" />
+                <Comments slug={post.slug} />
             </div>
 
             <Footer />

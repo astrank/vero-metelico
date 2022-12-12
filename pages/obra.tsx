@@ -32,20 +32,20 @@ const Obra: NextPage<ObraProps> = ({ posts, categories }) => {
 
             <Header />
 
-            <div className="flex flex-col gap-8 text-primary-900 mx-4 my-12 lg:mx-44 ">
+            <div className="flex flex-col gap-8 text-primary-900 mx-4 my-12 lg:mx-44 mb-auto">
                 <div className="flex gap-6">
                     <button 
                         key="All"
                         onClick={() => editPosts(posts)}
-                        className="bg-secondary-400 font-darker_grotesque text-md font-bold px-5 lg:text-xl md:px-6 py-2 hover:bg-secondary-200">
-                            Todas
+                        className="bg-secondary-400 font-darker_grotesque text-md px-5 lg:text-xl md:px-6 py-2 hover:bg-secondary-200">
+                            Todo
                     </button>
                     {categories && categories.length > 0 &&
                         categories.map(category => (
                             <button 
                                 key={category.name}
                                 onClick={() => editPosts(posts.filter(post => post.category === category.name))}
-                                className="bg-secondary-400 font-darker_grotesque text-md font-bold px-5 lg:text-xl md:px-6 py-2 hover:bg-secondary-200">
+                                className="bg-secondary-400 font-darker_grotesque text-md px-5 lg:text-xl md:px-6 py-2 hover:bg-secondary-200">
                                     {category.name}
                             </button>
                         ))}
