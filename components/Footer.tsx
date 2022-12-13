@@ -2,7 +2,8 @@ import Link from "next/link";
 
 export default function Footer() {
     return (
-        <footer className="flex justify-between items-center mx-4 my-3 lg:mx-24 lg:my-6 font-darker_grotesque text-1xl tracking-wide text-primary-900">
+        <footer className="flex flex-col-reverse gap-10 justify-between items-center mx-4 my-3 font-darker_grotesque text-1xl 
+                            tracking-wide text-primary-900 md:flex-row md:mx-10 md:my-6 lg:mx-14 xl:mx-24">
             <Link href="/" className="text-xl">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +59,7 @@ export default function Footer() {
                         </svg>
                     </li>
                 </ul>
-                <span className="font-darker_grotesque text-1xl mb-1">@verometelico</span>
+                <span className="font-darker_grotesque text-xl md:text-1xl mb-1">@verometelico</span>
             </div>
         </footer>
     );

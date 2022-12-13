@@ -47,14 +47,14 @@ export default function Obra() {
 
             <Header />
 
-            <div className="flex flex-col gap-8 text-primary-900 mx-4 my-24 lg:mx-60">
+            <div className="flex flex-col gap-8 text-primary-900 mx-4 my-10 lg:my-24 lg:mx-60">
                 <form method="POST" className="flex flex-col gap-4" action="https://formsubmit.co/46c8e5f4ab3f3c79b050148e5511b3cd" >
                     <div className="flex flex-col gap-3">
                         <label htmlFor="nombre" className="font-darker_grotesque">Nombre y Apellido (*)</label>
                         <input 
                             type="text" 
                             id="nombre"
-                            className={`border border-primary-700 px-2 py-2 focus:outline-none placeholder:text-primary-700 placeholder:font-darker_grotesque placeholder:text-lg ${formik.errors.nombre && formik.touched.nombre ? "outline outline-1 outline-red-500" : ""}`}
+                            className={`border border-primary-700 p-1 lg:p-2 focus:outline-none placeholder:text-primary-700 placeholder:font-darker_grotesque placeholder:text-lg ${formik.errors.nombre && formik.touched.nombre ? "outline outline-1 outline-red-500" : ""}`}
                             {...formik.getFieldProps('nombre')}
                             aria-label="Nombre" />
                         {formik.errors.nombre && formik.touched.nombre &&
@@ -66,7 +66,7 @@ export default function Obra() {
                             type="email" 
                             id="email" 
                             {...formik.getFieldProps('email')}
-                            className={`border border-primary-700 px-2 py-2 focus:outline-none placeholder:text-primary-700 placeholder:font-darker_grotesque placeholder:text-lg ${formik.errors.email && formik.touched.email ? "outline outline-1 outline-red-500" : ""}`}
+                            className={`border border-primary-700 p-1 lg:p-2 focus:outline-none placeholder:text-primary-700 placeholder:font-darker_grotesque placeholder:text-lg ${formik.errors.email && formik.touched.email ? "outline outline-1 outline-red-500" : ""}`}
                             aria-label="Email" />
                         {formik.errors.email && formik.touched.email &&
                                 <span className="text-red-500 font-darker_grotesque" aria-label={formik.errors.email}>{formik.errors.email}</span>}
@@ -77,7 +77,7 @@ export default function Obra() {
                             type="text" 
                             id="asunto" 
                             {...formik.getFieldProps('asunto')}
-                            className={`border border-primary-700 px-2 py-2 focus:outline-none placeholder:text-primary-700 placeholder:font-darker_grotesque placeholder:text-lg ${formik.errors.asunto && formik.touched.asunto ? "outline outline-1 outline-red-500" : ""}`}
+                            className={`border border-primary-700 p-1 lg:p-2 focus:outline-none placeholder:text-primary-700 placeholder:font-darker_grotesque placeholder:text-lg ${formik.errors.asunto && formik.touched.asunto ? "outline outline-1 outline-red-500" : ""}`}
                             aria-label="asunto" />
                         {formik.errors.asunto && formik.touched.asunto &&
                                 <span className="text-red-500 font-darker_grotesque" aria-label={formik.errors.asunto}>{formik.errors.asunto}</span>}
@@ -87,7 +87,7 @@ export default function Obra() {
                         <textarea 
                             {...formik.getFieldProps('mensaje')}
                             id="mensaje" 
-                            className={`border border-primary-700 px-2 py-2 focus:outline-none placeholder:text-primary-700 placeholder:font-darker_grotesque placeholder:text-lg ${formik.errors.mensaje && formik.touched.mensaje ? "outline outline-1 outline-red-500" : ""}`} 
+                            className={`border border-primary-700 p-1 lg:p-2 focus:outline-none placeholder:text-primary-700 placeholder:font-darker_grotesque placeholder:text-lg ${formik.errors.mensaje && formik.touched.mensaje ? "outline outline-1 outline-red-500" : ""}`} 
                             aria-label="mensaje"
                             rows={5}></textarea>
                         {formik.errors.mensaje && formik.touched.mensaje &&

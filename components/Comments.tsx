@@ -78,7 +78,7 @@ const Comments = ({ slug }: CommentsProps) => {
     };
 
     return (
-        <div className='mt-20 mb-10 text-primary-900'>
+        <div className='mt-8 mb-10 text-primary-900 lg:mt-20'>
             <span className='mt-8 font-bold'>Comentarios ({comments?.length})</span>
             <div className='flex flex-col gap-6 my-6'>
                 <textarea 

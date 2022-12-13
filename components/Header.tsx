@@ -1,22 +1,45 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "../utils/Auth";
 import { Dialog } from '@headlessui/react'
 import Login from "./Login"
 import { Menu } from '@headlessui/react'
 
+import { getFirestore, collection, addDoc, onSnapshot, doc, query, arrayUnion, arrayRemove, deleteDoc, updateDoc } from "firebase/firestore";
+import { initializeFirebase } from "../utils/Firebase";
+
 export default function Header() {
     const [isNavToggled, toggleNav] = useState(false);
     const router = useRouter();
     const { user, logout } = useAuth();
     const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [userPanel, toggleUserPanel] = useState<boolean>(false)
+    const [userPanel, toggleUserPanel] = useState<boolean>(false);
+    const [notifications, setNotifications] = useState([]);
+
+    const app = initializeFirebase();
+    const db = getFirestore(app);
+
+    useEffect(() => {
+        if (user) {
+            setIsOpen(false);
+        }
+    }, [user])
+
+    /*const getNotifications = () => {
+        const q = query(collection(db, "notifications"));
+        onSnapshot(q, (notificationsQuery) => {
+            setNotifications(notificationsQuery.docs.map((c) => {
+                let notification = c.data();
+                return notifications
+            }));
+        });
+    }*/
 
     return (
         <header
-            className="relative flex justify-between items-center mx-4 my-3 lg:mx-24 lg:my-6 
-            font-darker_grotesque lg:text-1xl tracking-wide text-primary-900"
+            className="relative flex justify-between items-center mx-4 my-3 
+            font-darker_grotesque tracking-wide text-primary-900 md:mx-10 md:my-6 lg:text-1xl lg:mx-14 xl:mx-24"
         >
             <Link href="/" className="text-xl">
                 <svg
@@ -142,7 +165,12 @@ export default function Header() {
                 <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
                 
                 <div className="fixed inset-0 flex items-center justify-center p-4">
-                    <Dialog.Panel className="mx-auto bg-white p-14">
+                    <Dialog.Panel className="flex flex-col mx-auto bg-white p-8">
+                        <button className="ml-auto hover:text-primary-700" onClick={() => setIsOpen(false)}>
+                            <svg  className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                         <Login />
                     </Dialog.Panel>
                 </div>
