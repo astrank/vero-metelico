@@ -4,16 +4,18 @@ import { useRouter } from "next/router";
 import { useAuth } from "../utils/Auth";
 import { Dialog } from '@headlessui/react'
 import Login from "./Login"
+import { Menu } from '@headlessui/react'
 
 export default function Header() {
     const [isNavToggled, toggleNav] = useState(false);
     const router = useRouter();
     const { user, logout } = useAuth();
     const [isOpen, setIsOpen] = useState<boolean>(false)
+    const [userPanel, toggleUserPanel] = useState<boolean>(false)
 
     return (
         <header
-            className="flex justify-between items-center mx-4 my-3 lg:mx-24 lg:my-6 
+            className="relative flex justify-between items-center mx-4 my-3 lg:mx-24 lg:my-6 
             font-darker_grotesque lg:text-1xl tracking-wide text-primary-900"
         >
             <Link href="/" className="text-xl">
@@ -34,77 +36,106 @@ export default function Header() {
                     </g>
                 </svg>
             </Link>
-            <nav className={`navbar ${isNavToggled ? "open" : ""}`}>
-                <ul
-                    className="flex flex-col gap-2 px-4 lg:px-0 lg:flex-row lg:gap-6"
-                    role="list"
-                    aria-label="Navegación Primaria"
+            <nav className="flex gap-4">
+                <button
+                    className={`btn_one ${
+                        isNavToggled ? "open" : "not_open"
+                    } lg:hidden`}
+                    onClick={() => toggleNav(!isNavToggled)}
                 >
-                    <a
-                        href="#"
-                        className={`hover:text-primary-700 ${
-                            router.pathname == "/sobre-mi"
-                                ? "underline underline-offset-6"
-                                : ""
-                        }`}
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div className={`navbar ${isNavToggled ? "open" : ""} flex gap-2 lg:gap-6`}>
+                    <ul
+                        className="flex flex-col gap-2 lg:px-0 lg:flex-row lg:gap-6"
+                        role="list"
+                        aria-label="Navegación Primaria"
                     >
-                        <li>Sobre mí</li>
-                    </a>
-                    <Link
-                        href="/obra"
-                        className={`hover:text-primary-700 ${
-                            router.pathname == "/obra"
-                                ? "underline underline-offset-6"
-                                : ""
-                        }`}
-                    >
-                        <li>Obra</li>
-                    </Link>
-                    <Link
-                        href="/invitados"
-                        className={`hover:text-primary-700 ${
-                            router.pathname == "/invitados"
-                                ? "underline underline-offset-6"
-                                : ""
-                        }`}
-                    >
-                        <li>Invitados</li>
-                    </Link>
-                    <a
-                        href="#"
-                        className={`hover:text-primary-700 ${
-                            router.pathname == "/escritura-grupal"
-                                ? "underline underline-offset-6"
-                                : ""
-                        }`}
-                    >
-                        <li>Escritura grupal</li>
-                    </a>
-                    <Link
-                        href="/contacto"
-                        className={`hover:text-primary-700 ${
-                            router.pathname == "/contacto"
-                                ? "underline underline-offset-6"
-                                : ""
-                        }`}
-                    >
-                        <li>Contacto</li>
-                    </Link>
-                    {user
-                        ? <button className="hover:text-primary-700 self-start" onClick={() => logout()}>Salir</button> 
-                        : <button className="hover:text-primary-700 self-start" onClick={() => setIsOpen(true)}>Entrar</button>}
-                </ul>
+                        <Link
+                            href="/sobre-mi"
+                            className={`hover:text-primary-700 ${
+                                router.pathname == "/sobre-mi"
+                                    ? "underline underline-offset-6"
+                                    : ""
+                            }`}
+                        >
+                            <li>Sobre mí</li>
+                        </Link>
+                        <Link
+                            href="/obra"
+                            className={`hover:text-primary-700 ${
+                                router.pathname == "/obra"
+                                    ? "underline underline-offset-6"
+                                    : ""
+                            }`}
+                        >
+                            <li>Obra</li>
+                        </Link>
+                        <Link
+                            href="/invitados"
+                            className={`hover:text-primary-700 ${
+                                router.pathname == "/invitados"
+                                    ? "underline underline-offset-6"
+                                    : ""
+                            }`}
+                        >
+                            <li>Invitados</li>
+                        </Link>
+                        <a
+                            href="#"
+                            className={`hover:text-primary-700 ${
+                                router.pathname == "/escritura-grupal"
+                                    ? "underline underline-offset-6"
+                                    : ""
+                            }`}
+                        >
+                            <li>Escritura grupal</li>
+                        </a>
+                        <Link
+                            href="/contacto"
+                            className={`hover:text-primary-700 ${
+                                router.pathname == "/contacto"
+                                    ? "underline underline-offset-6"
+                                    : ""
+                            }`}
+                        >
+                            <li>Contacto</li>
+                        </Link>
+                    </ul>
+                </div>
+                {user
+                    ?
+                        <Menu>
+                            <div className="flex flex-col my-auto items-center self-start">
+                                <Menu.Button>
+                                    <button className="items-center gap-1 self-start hover:text-primary-700 hidden lg:flex" onClick={() => toggleUserPanel(!userPanel)}>
+                                        <span className="mb-1">{user.displayName}</span>
+                                        <svg fill="currentColor" className="h-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                            <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
+                                        </svg>
+                                    </button>
+                                    <svg className="h-5 lg:hidden" fill="currentColor"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                                    </svg>
+                                </Menu.Button>
+                                {userPanel &&
+                                    <Menu.Items className="absolute bottom-0 top-14 shadow-xl z-10">
+                                        <Menu.Item>
+                                            {({ active }) => (
+                                                <button
+                                                    onClick={() => logout()}
+                                                    className={`${active && 'hover:text-primary-700'}`}>
+                                                    Salir
+                                                </button>
+                                            )}
+                                        </Menu.Item>
+                                    </Menu.Items>}
+                            </div>
+                        </Menu>
+                    : <button className="hover:text-primary-700 self-start" onClick={() => setIsOpen(true)}>Entrar</button>}
             </nav>
-            <button
-                className={`btn_one ${
-                    isNavToggled ? "open" : "not_open"
-                } lg:hidden`}
-                onClick={() => toggleNav(!isNavToggled)}
-            >
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
 
             <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
                 {/* Overlay */}

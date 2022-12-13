@@ -53,9 +53,9 @@ const Obra: NextPage<ObraProps> = ({ posts, categories }) => {
                 <div className="flex flex-col gap-10 my-6">
                     {visiblePosts && visiblePosts.length > 0 && 
                         visiblePosts.map((post, i) => (
-                            <div key={i} className="flex flex-col gap-3">
+                            <div key={i} className="group flex flex-col gap-3">
                                 <Link href={`/obra/${post.slug}`} className="self-start">
-                                    <h2 className="font-asap text-2xl">{post.title}</h2>
+                                    <h2 className="font-asap text-2xl group-hover:text-primary-700">{post.title}</h2>
                                 </Link>
                                 <Link href={`/obra/${post.slug}`}>
                                     <p className="font-roboto text-md text-primary-700 leading-8">

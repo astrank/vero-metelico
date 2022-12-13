@@ -46,6 +46,15 @@ const Comments = ({ slug }: CommentsProps) => {
                 replies: [],
             });
 
+            const notiRef = await addDoc(collection(db, "notifications", user.uid, "new-comment"), {
+                authorId: user.uid,
+                author: user.displayName,
+                comment: comment,
+                post: `${slug}`,
+                publishDate: Date.now(),
+                watched: false,
+            });
+
             writeNewComment("");
         } catch (e) {
             console.error("Error adding document: ", e);

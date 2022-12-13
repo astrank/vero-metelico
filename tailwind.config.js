@@ -16,12 +16,17 @@ module.exports = {
                 "secondary-200": "#EDD7CC",
                 "secondary-400": "#E2C4B5",
                 "secondary-600": "#d5b6a6",
+                google: "#4285f4",
+                "google-hover": "#366dc7",
             },
             fontSize: {
                 "1xl": ["1.3rem", "1.8rem"],
             },
             textUnderlineOffset: {
                 6: "6px",
+            },
+            minWidth: {
+                "1/2": "50%",
             },
             fontFamily: {
                 asap: [

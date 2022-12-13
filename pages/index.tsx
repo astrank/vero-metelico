@@ -32,7 +32,9 @@ const Home: NextPage = () => {
                             role="List"
                             aria-label="Barra de Navegación"
                         >
-                            <li>Sobre mí</li>
+                            <Link href="/sobre-mi">
+                                <li>Sobre mí</li>
+                            </Link>
                             <Link href="/obra" className="hover:text-primary-700">
                                 <li>Obra</li>
                             </Link>
