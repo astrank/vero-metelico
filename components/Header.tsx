@@ -165,14 +165,16 @@ export default function Header() {
                                 </Menu.Button>
                                 {userPanel &&
                                     <Menu.Items className="flex flex-col items-center justify-center absolute right-0 top-10 p-6 shadow-lg z-20 bg-white">
-                                        {notifications && notifications.length > 0 &&
-                                            notifications.map(noti => (
-                                                <Menu.Item>
-                                                    {({ active }) => (
-                                                        <Link href={`/obra/${noti.post}#${noti.commentId}`}>{`Nuevo comentario de ${noti.author}`}</Link>
-                                                    )}
-                                                </Menu.Item>
-                                            ))}
+                                        <Menu.Item>
+                                            {({ active }) => (
+                                                <div>
+                                                    {notifications && notifications.length > 0 &&
+                                                        notifications.map(noti => (
+                                                        <Link href={`/obra/${noti.post}#${noti.commentId}`} key={noti.commentId}>{`Nuevo comentario de ${noti.author}`}</Link>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </Menu.Item>
                                         <Menu.Item>
                                             {({ active }) => (
                                                 <button

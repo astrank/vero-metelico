@@ -15,10 +15,6 @@ type ObraProps = {
 const Obra: NextPage<ObraProps> = ({ posts, categories }) => {
     const [visiblePosts, editPosts] = useState<Post[]>(posts);
 
-    useEffect(() => {
-        console.log(posts[0].category === categories[1].name)
-    }, [])
-
     return (
         <div className="min-h-screen flex flex-col justify-between">
             <Head>
