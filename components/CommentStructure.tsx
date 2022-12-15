@@ -1,7 +1,7 @@
 import Login from "./Login"
 import { Comment } from "../types/Comment";
 import { User } from "firebase/auth";
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Dialog } from '@headlessui/react'
 import { getFirestore, collection, addDoc, onSnapshot, doc, query, arrayUnion, arrayRemove, deleteDoc, updateDoc } from "firebase/firestore";
 import { initializeFirebase } from "../utils/Firebase";
@@ -22,6 +22,12 @@ const CommentStructure = ({ comment, deleteComment, likeComment }: CommentStruct
 
     const app = initializeFirebase();
     const db = getFirestore(app);
+
+    useEffect(() => {
+        if (user) {
+            setIsOpen(false);
+        }
+    }, [user])
 
     const replyComment = async () => {
         try {
@@ -51,7 +57,7 @@ const CommentStructure = ({ comment, deleteComment, likeComment }: CommentStruct
     };
 
     return (
-        <div className='flex flex-col gap-4 group' key={comment.id}>
+        <div className='flex flex-col gap-4 group' id={comment.id} key={comment.id}>
             <div className="flex justify-between items-center">
                 <div>
                     <span className='font-bold'>{comment.author}</span>

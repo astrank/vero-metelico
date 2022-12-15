@@ -5,8 +5,9 @@ import { useAuth } from "../utils/Auth";
 import { Dialog } from '@headlessui/react'
 import Login from "./Login"
 import { Menu } from '@headlessui/react'
+import { Notification } from "../types/Notification";
 
-import { getFirestore, collection, addDoc, onSnapshot, doc, query, arrayUnion, arrayRemove, deleteDoc, updateDoc } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot, query } from "firebase/firestore";
 import { initializeFirebase } from "../utils/Firebase";
 
 export default function Header() {
@@ -15,7 +16,8 @@ export default function Header() {
     const { user, logout } = useAuth();
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [userPanel, toggleUserPanel] = useState<boolean>(false);
-    const [notifications, setNotifications] = useState([]);
+    const [notifications, setNotifications] = useState<Notification[]>([]);
+    const uid = "7NXk8PiCwggyA5vWYdJT5lVTxg22";
 
     const app = initializeFirebase();
     const db = getFirestore(app);
@@ -23,18 +25,13 @@ export default function Header() {
     useEffect(() => {
         if (user) {
             setIsOpen(false);
+
+            const q = query(collection(db, "notifications", user.uid, "comment"));
+            onSnapshot(q, (notiQuery) => {
+                setNotifications(notiQuery.docs.map(n => { return n.data() as Notification }))
+            });
         }
     }, [user])
-
-    /*const getNotifications = () => {
-        const q = query(collection(db, "notifications"));
-        onSnapshot(q, (notificationsQuery) => {
-            setNotifications(notificationsQuery.docs.map((c) => {
-                let notification = c.data();
-                return notifications
-            }));
-        });
-    }*/
 
     return (
         <header
@@ -76,56 +73,79 @@ export default function Header() {
                         role="list"
                         aria-label="Navegación Primaria"
                     >
-                        <Link
-                            href="/sobre-mi"
-                            className={`hover:text-primary-700 ${
-                                router.pathname == "/sobre-mi"
-                                    ? "underline underline-offset-6"
-                                    : ""
-                            }`}
-                        >
-                            <li>Sobre mí</li>
-                        </Link>
-                        <Link
-                            href="/obra"
-                            className={`hover:text-primary-700 ${
-                                router.pathname == "/obra"
-                                    ? "underline underline-offset-6"
-                                    : ""
-                            }`}
-                        >
-                            <li>Obra</li>
-                        </Link>
-                        <Link
-                            href="/invitados"
-                            className={`hover:text-primary-700 ${
-                                router.pathname == "/invitados"
-                                    ? "underline underline-offset-6"
-                                    : ""
-                            }`}
-                        >
-                            <li>Invitados</li>
-                        </Link>
-                        <a
-                            href="#"
-                            className={`hover:text-primary-700 ${
-                                router.pathname == "/escritura-grupal"
-                                    ? "underline underline-offset-6"
-                                    : ""
-                            }`}
-                        >
-                            <li>Escritura grupal</li>
-                        </a>
-                        <Link
-                            href="/contacto"
-                            className={`hover:text-primary-700 ${
-                                router.pathname == "/contacto"
-                                    ? "underline underline-offset-6"
-                                    : ""
-                            }`}
-                        >
-                            <li>Contacto</li>
-                        </Link>
+                        <li>
+                            <Link
+                                href="/sobre-mi"
+                                className={`hover:text-primary-700 ${
+                                    router.pathname == "/sobre-mi"
+                                        ? "underline underline-offset-6"
+                                        : ""
+                                }`}
+                            >
+                                Sobre mí
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/obra" className="flex gap-1 items-center justify-center">
+                                <span
+                                    className={`hover:text-primary-700 ${
+                                        router.pathname == "/obra"
+                                            ? "underline underline-offset-6"
+                                            : ""
+                                    }`}
+                                >
+                                    Obra
+                                </span>
+                                <svg fill="currentColor" className="h-3 mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                    <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
+                                </svg>
+                            </Link>
+
+                            <ul className="hidden">
+                                <li>
+                                    <Link href="#">Cuentos</Link>
+                                </li>
+                                <li>
+                                    <Link href="#">Reflexiones</Link>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <Link
+                                href="/invitados"
+                                className={`hover:text-primary-700 ${
+                                    router.pathname == "/invitados"
+                                        ? "underline underline-offset-6"
+                                        : ""
+                                }`}
+                            >
+                                Invitados
+                            </Link>
+                        </li>
+                        <li>
+                            <a
+                                href="#"
+                                className={`hover:text-primary-700 ${
+                                    router.pathname == "/escritura-grupal"
+                                        ? "underline underline-offset-6"
+                                        : ""
+                                }`}
+                            >
+                                Escritura grupal
+                            </a>
+                        </li>
+                        <li>
+                            <Link
+                                href="/contacto"
+                                className={`hover:text-primary-700 ${
+                                    router.pathname == "/contacto"
+                                        ? "underline underline-offset-6"
+                                        : ""
+                                }`}
+                            >
+                                Contacto
+                            </Link>
+                        </li>
                     </ul>
                 </div>
                 {user
@@ -134,7 +154,7 @@ export default function Header() {
                             <div className="flex flex-col my-auto items-center self-start">
                                 <Menu.Button>
                                     <button className="items-center gap-1 self-start hover:text-primary-700 hidden lg:flex" onClick={() => toggleUserPanel(!userPanel)}>
-                                        <span className="mb-1">{user.displayName}</span>
+                                        <span className="mb-1">{notifications.length > 0 ? `(${notifications.length})${user.displayName}` : `${user.displayName}`}</span>
                                         <svg fill="currentColor" className="h-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                             <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
                                         </svg>
@@ -144,7 +164,15 @@ export default function Header() {
                                     </svg>
                                 </Menu.Button>
                                 {userPanel &&
-                                    <Menu.Items className="absolute bottom-0 top-14 shadow-xl z-10">
+                                    <Menu.Items className="flex flex-col items-center justify-center absolute right-0 top-10 p-6 shadow-lg z-20 bg-white">
+                                        {notifications && notifications.length > 0 &&
+                                            notifications.map(noti => (
+                                                <Menu.Item>
+                                                    {({ active }) => (
+                                                        <Link href={`/obra/${noti.post}#${noti.commentId}`}>{`Nuevo comentario de ${noti.author}`}</Link>
+                                                    )}
+                                                </Menu.Item>
+                                            ))}
                                         <Menu.Item>
                                             {({ active }) => (
                                                 <button

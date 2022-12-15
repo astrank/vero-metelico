@@ -16,7 +16,7 @@ const Home: NextPage = () => {
             </Head>
 
             <div className="grid auto-cols-auto lg:grid-cols-2 h-screen text-primary-900">
-                <div className="relative hidden lg:block">
+                <div className="relative">
                     <Image
                         src="/veronica-metelico1.jpg"
                         fill
@@ -26,7 +26,7 @@ const Home: NextPage = () => {
                     />
                 </div>
                 <div className="flex flex-col justify-between items-center m-6">
-                    <nav className="font-darker_grotesque text-lg md:text-xl tracking-wide text-1xl">
+                    <nav className="font-darker_grotesque text-lg md:text-xl tracking-wide lg:text-1xl">
                         <ul
                             className="flex flex-col gap-4 text-center lg:text-start lg:flex-row md:gap-6"
                             role="List"

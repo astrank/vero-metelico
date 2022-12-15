@@ -2,9 +2,9 @@ import Link from "next/link";
 
 export default function Footer() {
     return (
-        <footer className="flex flex-col-reverse gap-10 justify-between items-center mx-4 my-3 font-darker_grotesque text-1xl 
-                            tracking-wide text-primary-900 md:flex-row md:mx-10 md:my-6 lg:mx-14 xl:mx-24">
-            <Link href="/" className="text-xl">
+        <footer className="flex flex-col-reverse gap-10 justify-center items-center mx-4 my-3 font-darker_grotesque text-1xl 
+                            tracking-wide text-primary-900 md:flex-row md:mx-10 md:my-8 lg:mx-14 xl:mx-24">
+            {/*<Link href="/" className="text-xl">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     x="0"
@@ -21,8 +21,8 @@ export default function Footer() {
                         <path d="M79 350.8L75.8 274l-34.3 77.1h-1.3L5.9 274l-3.2 76.9H.2l3.5-84h1.4L40.8 347l35.6-80.1h1.4l3.5 84H79zM154.1 269.1v41.2h40.4v2.3h-40.4v36H203v2.3h-51.3v-84H203v2.3h-48.9zM339.4 269.1h-29.9v81.8h-2.4v-81.8h-29.9v-2.3h62.2v2.3zM419.7 269.1v41.2h40.4v2.3h-40.4v36h48.9v2.3h-51.3v-84h51.3v2.3h-48.9zM74.3 481.4v2.3H23.1v-84h2.4v81.8h48.8zM172.4 399.6h2.4v84h-2.4v-84zM273.3 441.6c0-24.6 18.4-43.1 42.9-43.1 9.6 0 19.4 2.7 25.8 7.4l-1.3 2.2c-6.6-4.8-15.8-7.2-24.6-7.2-22.9 0-40.3 17.6-40.3 40.8 0 23.2 17.3 40.8 40.3 40.8 8.8 0 18.5-2.6 24.6-7.2l1.3 2.2c-6.5 4.7-16.3 7.4-25.8 7.4-24.5-.2-42.9-18.7-42.9-43.3zM396.3 441.7c0-24 17.9-43.1 42.9-43.1s42.9 19.1 42.9 43.1c0 24.6-17.9 43-42.9 43s-42.9-18.4-42.9-43zm83.3 0c0-22.6-17.8-40.8-40.4-40.8-22.6 0-40.4 18.2-40.4 40.8 0 23.8 17.8 40.6 40.4 40.6 22.6 0 40.4-16.8 40.4-40.6z"></path>
                     </g>
                 </svg>
-            </Link>
-            <div className="flex gap-6 items-center">
+            </Link>*/}
+            <div className="flex gap-8 items-center">
                 <ul
                     className="flex gap-4 lg:gap-6"
                     role="List"
@@ -59,7 +59,6 @@ export default function Footer() {
                         </svg>
                     </li>
                 </ul>
-                <span className="font-darker_grotesque text-xl md:text-1xl mb-1">@verometelico</span>
             </div>
         </footer>
     );

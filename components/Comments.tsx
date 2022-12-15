@@ -1,5 +1,6 @@
 import { getFirestore, collection, addDoc, onSnapshot, doc, query, arrayUnion, arrayRemove, deleteDoc, updateDoc } from "firebase/firestore";
 import { initializeFirebase } from "../utils/Firebase";
+import { getDatabase, set, ref, onValue } from "firebase/database";
 import { useAuth } from "../utils/Auth";
 import { useEffect, useState } from "react";
 import { Comment } from "../types/Comment";
@@ -13,16 +14,24 @@ type CommentsProps = {
 
 const Comments = ({ slug }: CommentsProps) => {
     const app = initializeFirebase();
-    const db = getFirestore(app);
+    const firestore = getFirestore(app);
+    const db = getDatabase(app);
     const { user, isAdmin } = useAuth();
+    const uid = "7NXk8PiCwggyA5vWYdJT5lVTxg22";
 
     const [isOpen, setIsOpen] = useState(false);
     const [comments, setComments] = useState<Comment[]>([]);
     const [newComment, writeNewComment] = useState<string>("");
 
+    useEffect(() => {
+        if (user) {
+            setIsOpen(false);
+        }
+    }, [user])
+
     // Get all comments of post
     useEffect(() => {
-        const q = query(collection(db, "posts", slug, "comments"));
+        const q = query(collection(firestore, "posts", slug, "comments"));
         onSnapshot(q, (commentsQuery) => {
             setComments(commentsQuery.docs.map((c) => {
                 let comment = c.data();
@@ -34,7 +43,7 @@ const Comments = ({ slug }: CommentsProps) => {
 
     const postComment = async (comment: string) => {
         try {
-            const docRef = await addDoc(collection(db, "posts", slug, "comments"), {
+            const docRef = await addDoc(collection(firestore, "posts", slug, "comments"), {
                 userId: user.uid,
                 author: user.displayName,
                 comment: comment,
@@ -45,11 +54,19 @@ const Comments = ({ slug }: CommentsProps) => {
                 parent: false,
                 replies: [],
             });
+            
+            set(ref(db, `notifications/${user.uid}`), {
+                type: `Nuevo comentario de ${user.displayName}`,
+                comment: comment,
+                post: slug
+            })
 
-            const notiRef = await addDoc(collection(db, "notifications", user.uid, "new-comment"), {
+            const notiRef = await addDoc(collection(firestore, "notifications", uid, "comment"), {
+                type: "new-comment",
                 authorId: user.uid,
                 author: user.displayName,
                 comment: comment,
+                commentId: docRef.id,
                 post: `${slug}`,
                 publishDate: Date.now(),
                 watched: false,
@@ -62,16 +79,16 @@ const Comments = ({ slug }: CommentsProps) => {
     };
 
     const deleteComment = async (id: string) => {
-        await deleteDoc(doc(db, "posts", slug, "comments", id))
+        await deleteDoc(doc(firestore, "posts", slug, "comments", id))
     };
 
     const likeComment = async (comment: Comment) => {
         if(!comment.likes.includes(user.uid)) {
-            await updateDoc(doc(db, "posts", slug, "comments", comment.id), {
+            await updateDoc(doc(firestore, "posts", slug, "comments", comment.id), {
                 likes: arrayUnion(user.uid)
             });
         } else {
-            await updateDoc(doc(db, "posts", slug, "comments", comment.id), {
+            await updateDoc(doc(firestore, "posts", slug, "comments", comment.id), {
                 likes: arrayRemove(user.uid)
             });
         }
