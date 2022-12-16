@@ -90,7 +90,7 @@ export default function Header() {
                     } flex gap-2 lg:gap-6`}
                 >
                     <ul
-                        className="flex flex-col gap-2 lg:px-0 lg:flex-row lg:gap-4 px-4 md:px-10 items-center justify-center"
+                        className="flex flex-col gap-2 lg:px-0 lg:flex-row lg:gap-4 px-4 md:px-10"
                         role="list"
                         aria-label="Navegación Primaria"
                     >
