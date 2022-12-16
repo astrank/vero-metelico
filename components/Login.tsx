@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "../utils/Auth";
+import Button from "../components/Button";
 
 const Login = () => {
     const { login, google } = useAuth();
@@ -33,7 +34,7 @@ const Login = () => {
         <div
             className="flex flex-col justify-center text-primary-900 p-4"
         >
-            <h1 className="text-4xl font-bold mb-10 font-darker_grotesque">
+            <h1 className="text-4xl font-bold mb-10">
                 Ingresa con tu cuenta
             </h1>
             {error && (
@@ -84,12 +85,7 @@ const Login = () => {
                         </span>
                     )}
                 </div>
-                <button
-                    type="submit"
-                    className="bg-secondary-400 font-darker_grotesque text-md px-5 lg:text-xl md:px-6 py-2 mt-6 self-start hover:bg-secondary-200"
-                >
-                    Entrar
-                </button>
+                <Button text="Entrar" type="submit" />
             </form>
         </div>
     );

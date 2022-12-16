@@ -3,6 +3,7 @@ export type Comment = {
     author: string,
     userId: string,
     post: string,
+    postTitle: string,
     comment: string,
     publishDate: string,
     likes: string[],

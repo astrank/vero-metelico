@@ -25,6 +25,9 @@ module.exports = {
             textUnderlineOffset: {
                 6: "6px",
             },
+            maxWidth: {
+                xxs: "16rem",
+            },
             minWidth: {
                 "1/2": "50%",
             },
@@ -53,23 +56,6 @@ module.exports = {
                     "-apple-system",
                     "BlinkMacSystemFont",
                     "Segoe UI",
-                    "Helvetica Neue",
-                    "Arial",
-                    "Noto Sans",
-                    "sans-serif",
-                    "Apple Color Emoji",
-                    "Segoe UI Emoji",
-                    "Segoe UI Symbol",
-                    "Noto Color Emoji",
-                ],
-                darker_grotesque: [
-                    "Darker Grotesque",
-                    "ui-sans-serif",
-                    "system-ui",
-                    "-apple-system",
-                    "BlinkMacSystemFont",
-                    "Segoe UI",
-                    "Roboto",
                     "Helvetica Neue",
                     "Arial",
                     "Noto Sans",

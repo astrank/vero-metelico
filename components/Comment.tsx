@@ -1,78 +1,71 @@
-import Dialoga from "./Login"
-import { Comment } from "../types/Comment";
-import { User } from "firebase/auth";
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Dialog } from '@headlessui/react'
+import { Comment as CommentType } from "../types/Comment";
+import Login from "./Login"
+import CommentInput from './CommentInput';
+
 import { getFirestore, collection, addDoc, onSnapshot, doc, query, arrayUnion, arrayRemove, deleteDoc, updateDoc } from "firebase/firestore";
 import { initializeFirebase } from "../utils/Firebase";
-import CommentStructure from "./CommentStructure";
+import { useAuth } from "../utils/Auth";
 
 type CommentProps = {
-    comment: Comment,
-    replies: Comment[],
-    user: User,
-    isAdmin: boolean,
-    likeComment: (comment: Comment) => {},
-    deleteComment: (id: string) => {}
+    comment: CommentType,
+    likeComment: (comment: CommentType) => {},
+    deleteComment: (id: string) => {},
 }
 
-const CommentComponent = ({ comment, replies, user, isAdmin, deleteComment, likeComment }: CommentProps) => {
+const Comment = ({ comment, deleteComment, likeComment }: CommentProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [isReplyBoxOpen, toggleReplyBox] = useState<boolean>(false)
-    const [newComment, writeNewComment] = useState<string>("");
-    const [showingReplies, toggleReplies] = useState<boolean>(false);
+
+    const { user, isAdmin } = useAuth();
+
+    const dayjs = require('dayjs')
+    const relativeTime = require('dayjs/plugin/relativeTime')
+    require('dayjs/locale/es')
+    dayjs.extend(relativeTime);
 
     const app = initializeFirebase();
     const db = getFirestore(app);
+    const uid = "7NXk8PiCwggyA5vWYdJT5lVTxg22";
 
-    const replyComment = async () => {
-        try {
-            const docRef = await addDoc(collection(db, "posts", comment.post, "comments"), {
-                userId: user.uid,
-                author: user.displayName,
-                comment: newComment,
-                post: `${comment.post}`,
-                publishDate: Date.now(),
-                likes: [],
-                reply: true,
-                parent: comment.id,
-                replies: [],
-            });
-
-            if(!comment.replies.includes(docRef.id)) {
-                await updateDoc(doc(db, "posts", comment.post, "comments", comment.id), {
-                    replies: arrayUnion(docRef.id)
-                });
-            }
-
-            writeNewComment("");
-            toggleReplyBox(false);
-        } catch (e) {
-            console.error("Error adding document: ", e);
+    useEffect(() => {
+        if (user) {
+            setIsOpen(false);
         }
-    };
+    }, [user])
+
+    const closeReplyBox = () => {
+        toggleReplyBox(false);
+    }
 
     return (
-        <div className='flex flex-col gap-6 mt-8 group' key={comment.id}>
-            <CommentStructure comment={comment} likeComment={likeComment} deleteComment={deleteComment} />
-            
-            {replies && replies.length > 0 && 
-                <button 
-                    className={`flex items-center gap-2 font-bold self-start`} 
-                    onClick={() => toggleReplies(!showingReplies)}>
-                    <svg className={`h-3 ${showingReplies ? "rotate-180" : ""}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
-                        <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
+        <div className='flex flex-col gap-4 group' id={comment.id} key={comment.id}>
+            <div className="flex justify-between items-center">
+                <div>
+                    <span className='font-bold'>{comment.author}</span>
+                    <span> · {dayjs(comment.publishDate).locale("es").fromNow()}</span>
+                </div>
+                {(comment.userId === user?.uid || isAdmin) &&
+                    <button className="hidden justify-self-end group-hover:block" onClick={() => deleteComment(comment.id)} >
+                        <svg className="h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+                        </svg>
+                    </button>}
+            </div>
+            <p>{comment.comment}</p>
+            <div className="flex gap-4 items-center">
+                <button className="text-sm flex items-center gap-2" onClick={() => user ? likeComment(comment) : setIsOpen(true)}>
+                    <svg className="h-6" xmlns="http://www.w3.org/2000/svg" fill={ comment.likes.includes(user?.uid) ? "currentColor" : "none" } viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                     </svg>
-                    <span>{replies.length == 1 ? `${replies.length} respuesta` : `${replies.length} respuestas` }</span>
-                </button>}
+                    <span>{comment.likes.length}</span>
+                </button>
+                <button onClick={() => toggleReplyBox(true)}>Responder</button>
+            </div>
 
-            {replies && replies.length > 0 && showingReplies &&
-                replies.map(c => (
-                    <div className="ml-6" key={c.id}>
-                        <CommentStructure comment={c} likeComment={likeComment} deleteComment={deleteComment} />
-                    </div>
-                ))}
-
+            {isReplyBoxOpen &&
+                <CommentInput comment={comment} closeReplyBox={closeReplyBox} title={comment.postTitle} slug={comment.post} />}
 
             <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
                 {/* Overlay */}
@@ -80,7 +73,7 @@ const CommentComponent = ({ comment, replies, user, isAdmin, deleteComment, like
                 
                 <div className="fixed inset-0 flex items-center justify-center p-4">
                     <Dialog.Panel className="mx-auto bg-white p-14">
-                        <Dialoga />
+                        <Login />
                     </Dialog.Panel>
                 </div>
             </Dialog>
@@ -88,4 +81,4 @@ const CommentComponent = ({ comment, replies, user, isAdmin, deleteComment, like
     )
 }
 
-export default CommentComponent;
+export default Comment;
