@@ -73,7 +73,7 @@ export default function Header() {
                     </g>
                 </svg>
             </Link>
-            <nav className="flex gap-4">
+            <nav className="flex gap-4 justify-center items-center">
                 <button
                     className={`btn_one ${
                         isNavToggled ? "open" : "not_open"
@@ -90,7 +90,7 @@ export default function Header() {
                     } flex gap-2 lg:gap-6`}
                 >
                     <ul
-                        className="flex flex-col gap-2 lg:px-0 lg:flex-row lg:gap-4 px-4 md:px-10"
+                        className="flex flex-col gap-2 lg:px-0 lg:flex-row lg:gap-4 px-4 md:px-10 items-center justify-center"
                         role="list"
                         aria-label="Navegación Primaria"
                     >
@@ -110,8 +110,22 @@ export default function Header() {
                                 Obra
                             </Link>
                             <ul className="flex flex-col gap-2 ml-4 mt-2 block md:hidden">
-                                <li><Link className="hover:text-primary-700" href="/cuentos">Cuentos</Link></li>
-                                <li><Link className="hover:text-primary-700" href="/reflexiones">Reflexiones</Link></li>
+                                <li>
+                                    <Link
+                                        className="hover:text-primary-700"
+                                        href="/cuentos"
+                                    >
+                                        Cuentos
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        className="hover:text-primary-700"
+                                        href="/reflexiones"
+                                    >
+                                        Reflexiones
+                                    </Link>
+                                </li>
                             </ul>
                         </li>
                         <li>
@@ -135,7 +149,7 @@ export default function Header() {
                                 Contacto
                             </Link>
                         </li>
-                    </ul>
+                        </ul>
                 </div>
                 {user ? (
                     <Menu>
@@ -173,13 +187,13 @@ export default function Header() {
                                 />
                             </svg>
                         </Menu.Button>
-                            <Menu.Items
-                                className="absolute flex flex-col items-center justify-center rounded-md mx-4 mt-4
+                        <Menu.Items
+                            className="absolute flex flex-col items-center justify-center rounded-md mx-4 mt-4
                                             top-10 right-0 border border-neutral-100 overflow-hidden shadow-lg z-20 
                                             bg-neutral-200 md:mx-10 lg:mx-14 xl:mx-24 max-w-full"
-                            >
-                                <Menu.Item>
-                                    <div className="flex flex-col gap-5 p-4 max-h-96 overflow-y-scroll">
+                        >
+                            <Menu.Item>
+                                <div className="flex flex-col gap-5 p-4 max-h-96 overflow-y-scroll">
                                     {notifications &&
                                         notifications.length > 0 &&
                                         notifications
@@ -217,26 +231,46 @@ export default function Header() {
                                                     </p>
                                                 </Link>
                                             ))}
-                                            </div>
-                                </Menu.Item>
+                                </div>
+                            </Menu.Item>
 
-
-                                <Menu.Item>
-                                                    <div className="flex justify-center bg-neutral-800 text-lg font-bold py-2 
-                                                text-white hover:text-neutral-200 w-full">
-                                    <button className="w-full">Salir</button>
-                                    </div>
-                                </Menu.Item>
-                            </Menu.Items>
+                            <Menu.Item>
+                                <div
+                                    className="flex justify-center bg-neutral-800 text-lg font-bold py-2 
+                                                text-white hover:text-neutral-200 w-full"
+                                >
+                                    <button
+                                        className="w-full"
+                                        onClick={() => logout()}
+                                    >
+                                        Salir
+                                    </button>
+                                </div>
+                            </Menu.Item>
+                        </Menu.Items>
                     </Menu>
                 ) : (
                     <button
-                        className="hover:text-primary-700 self-start"
+                        className="hover:text-primary-700 flex items-center"
                         onClick={() => setIsOpen(true)}
                     >
-                        Entrar
+                        <svg
+                            className="h-5"
+                            fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+                            />
+                        </svg>
                     </button>
                 )}
+                
             </nav>
 
             <Dialog
@@ -275,95 +309,3 @@ export default function Header() {
         </header>
     );
 }
-
-
-/*
-<DropdownMenu.Root modal={false}>
-    <DropdownMenu.Trigger
-        className="flex items-center justify-center"
-        onClick={() => toggleUserPanel(!userPanel)}
-    >
-        <div className="items-center gap-1 self-start hover:text-primary-700 hidden ">
-            <span>
-                {notifications.length > 0
-                    ? `(${notifications.length}) ${user.displayName}`
-                    : `${user.displayName}`}
-            </span>
-            <svg
-                fill="currentColor"
-                className="h-3"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 512 512"
-            >
-                <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
-            </svg>
-        </div>
-        <svg
-            className="h-5"
-            fill="currentColor"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-        >
-            <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-            />
-        </svg>
-    </DropdownMenu.Trigger>
-    <DropdownMenu.Portal className="min-w-full">
-        <DropdownMenu.Content
-            className="flex flex-col items-center justify-center rounded-md mx-4 mt-4
-                        border border-neutral-100 overflow-hidden shadow-lg z-20 
-                        bg-neutral-200 md:mx-10 lg:mx-14 xl:mx-24 max-w-full"
-        >
-            <DropdownMenu.Item className="flex flex-col gap-5 p-4 max-h-96 overflow-y-scroll">
-                {notifications &&
-                    notifications.length > 0 &&
-                    notifications
-                        .sort((a, b) =>
-                            a.publishDate < b.publishDate
-                                ? 1
-                                : b.publishDate <
-                                    a.publishDate
-                                ? -1
-                                : 0
-                        )
-                        .map((noti) => (
-                            <Link
-                                className="flex flex-col gap-2"
-                                href={`/obra/${noti.post}#${noti.commentId}`}
-                                key={noti.commentId}
-                            >
-                                <div className="flex justify-between gap-4">
-                                    <span className="font-bold text-md max-w-xs text-primary-900">
-                                        {noti.type ==
-                                        "new-reply"
-                                            ? `${noti.author} te ha respondido en ${noti.postTitle}`
-                                            : `${noti.author} ha comentado en ${noti.postTitle}`}
-                                    </span>
-                                    <span className="text-neutral-500 font-light text-sm">
-                                        {dayjs(
-                                            noti.publishDate
-                                        )
-                                            .locale("es")
-                                            .fromNow()}
-                                    </span>
-                                </div>
-                                <p className="text-neutral-500 text-sm">
-                                    {noti.comment}
-                                </p>
-                            </Link>
-                        ))}
-            </DropdownMenu.Item>
-
-            <DropdownMenu.Item className="flex justify-center bg-neutral-800 text-lg font-bold py-2 
-                            text-white hover:text-neutral-200 w-full">
-                <button className="w-full">Salir</button>
-            </DropdownMenu.Item>
-        </DropdownMenu.Content>
-    </DropdownMenu.Portal>
-</DropdownMenu.Root>
-*/
