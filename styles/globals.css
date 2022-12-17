@@ -44,6 +44,13 @@
     url('/fonts/asap-v26-latin-600.svg#Asap') format('svg');
 }
 
+:root {
+  --hamburger-color: #38403D;
+  --hamburger-gap: 7px;
+  --hamburger-width: 24px;
+  --hamburger-box-height: 14px;
+}
+
 html,
 body {
   padding: 0;
@@ -87,141 +94,105 @@ a {
 
 /* Hamburguer menu */
 
-.btn_one {
-  width: 1.5em;
-  height: 1.5em;
-  position: relative;
-  display: block;
+.hamburger {
+  display: inline-block;
   cursor: pointer;
+  transition-property: opacity, filter;
+  transition-duration: 0.15s;
+  transition-timing-function: linear;
+  font: inherit;
+  color: inherit;
+  text-transform: none;
+  background-color: transparent;
+  border: 0;
+  margin: 0;
+  overflow: visible;
 }
 
-.btn_one span {
-  display: block;
-  width: 100%;
-  box-shadow: 0 0px 10px 0 rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
-  height: 2px;
-  background: #404946;
-  transition: all .3s;
+.hamburger.is_active .hamburger_inner,
+.hamburger.is_active .hamburger_inner::before,
+.hamburger.is_active .hamburger_inner::after {
+  background-color: var(--hamburger-color);
+}
+
+.hamburger_box {
+  width: var(--hamburger-width);
+  height: var(--hamburger-box-height);
+  display: inline-block;
   position: relative;
 }
 
-.btn_one span+span {
-  margin-top: 5px;
+.hamburger_inner {
+  display: block;
+  top: 50%;
 }
 
-.btn_one.open span:nth-child(1) {
-  animation: ease .6s center-to-top forwards;
+.hamburger_inner,
+.hamburger_inner::before,
+.hamburger_inner::after {
+  width: var(--hamburger-width);
+  height: 2px;
+  background-color: var(--hamburger-color);
+  border-radius: 2px;
+  position: absolute;
+  transition-property: transform;
+  transition-duration: 0.15s;
+  transition-timing-function: ease;
 }
 
-.btn_one.not_open span:nth-child(1) {
-  animation: ease .6s top-to-center forwards;
+.hamburger_inner::before,
+.hamburger_inner::after {
+  content: "";
+  display: block;
 }
 
-.btn_one.open span:nth-child(2) {
-  animation: ease .6s scaled forwards;
+.hamburger_inner::before {
+  top: calc(var(--hamburger-gap) * -1);
 }
 
-.btn_one.not_open span:nth-child(2) {
-  animation: ease .6s scaled-2 forwards;
+.hamburger_inner::after {
+  bottom: calc(var(--hamburger-gap) * -1);
 }
 
-.btn_one.open span:nth-child(3) {
-  animation: ease .6s center-to-bottom forwards;
+.hamburger__squeeze .hamburger_inner {
+  transition-duration: 0.075s;
+  transition-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
-.btn_one.not_open span:nth-child(3) {
-  animation: ease .6s bottom-to-center forwards;
+.hamburger__squeeze .hamburger_inner::before {
+  transition: top 0.075s 0.12s ease, opacity 0.075s ease;
 }
 
-@keyframes center-to-top {
-  0% {
-    top: 0;
-    transform: rotate(0);
-  }
-
-  50% {
-    top: 7px;
-    transform: rotate(0);
-  }
-
-  100% {
-    top: 7px;
-    transform: rotate(45deg);
-  }
+.hamburger__squeeze .hamburger_inner::after {
+  transition: bottom 0.075s 0.12s ease, transform 0.075s cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
-@keyframes top-to-center {
-  0% {
-    top: 7px;
-    transform: rotate(45deg);
-  }
-
-  50% {
-    top: 7px;
-    transform: rotate(0deg);
-  }
-
-  100% {
-    top: 0;
-    transform: rotate(0deg);
-  }
+.hamburger__squeeze.is_active .hamburger_inner {
+  transform: rotate(45deg);
+  transition-delay: 0.12s;
+  transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
-@keyframes center-to-bottom {
-  0% {
-    bottom: 0;
-    transform: rotate(0);
-  }
-
-  50% {
-    bottom: 7px;
-    transform: rotate(0);
-  }
-
-  100% {
-    bottom: 7px;
-    transform: rotate(135deg);
-  }
+.hamburger__squeeze.is_active .hamburger_inner::before {
+  top: 0;
+  opacity: 0;
+  transition: top 0.075s ease, opacity 0.075s 0.12s ease;
 }
 
-@keyframes bottom-to-center {
-  0% {
-    bottom: 7px;
-    transform: rotate(135deg);
-  }
-
-  50% {
-    bottom: 7px;
-    transform: rotate(0);
-  }
-
-  100% {
-    bottom: 0;
-    transform: rotate(0);
-  }
+.hamburger__squeeze.is_active .hamburger_inner::after {
+  bottom: 0;
+  transform: rotate(-90deg);
+  transition: bottom 0.075s ease, transform 0.075s 0.12s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
-@keyframes scaled {
-  50% {
-    transform: scale(0);
-  }
+/* shorter line */
 
-  100% {
-    transform: scale(0);
-  }
+.hamburger.is_active .hamburger_inner::after {
+  width: var(--hamburger-width);
+  margin-left: 0px;
 }
 
-@keyframes scaled-2 {
-  0% {
-    transform: scale(0);
-  }
-
-  50% {
-    transform: scale(0);
-  }
-
-  100% {
-    transform: scale(1);
-  }
+.hamburger_inner::after {
+  width: calc(var(--hamburger-width) - 4px);
+  margin-left: 4px;
 }

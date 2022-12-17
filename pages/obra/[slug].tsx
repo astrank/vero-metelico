@@ -76,7 +76,7 @@ const Obra: NextPage<ObraProps> = ({ post }) => {
                 </Link>
                 <div className="flex flex-col gap-10 my-6">
                     <h1 className="font-asap text-3xl">{post.title}</h1>
-                    <Markdown className="flex flex-col gap-6 font-roboto text:md md:text-lg text-primary-700 leading-8">
+                    <Markdown className="flex flex-col gap-6 font-roboto text:md md:text-lg text-primary-700 text-justify leading-8">
                         {post.content}
                     </Markdown>
                 </div>

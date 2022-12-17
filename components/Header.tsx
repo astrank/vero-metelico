@@ -15,6 +15,7 @@ import {
     query,
 } from "firebase/firestore";
 import { initializeFirebase } from "../utils/Firebase";
+import { spawn } from "child_process";
 
 export default function Header() {
     const [isNavToggled, toggleNav] = useState(false);
@@ -75,14 +76,13 @@ export default function Header() {
             </Link>
             <nav className="flex gap-4 justify-center items-center">
                 <button
-                    className={`btn_one ${
-                        isNavToggled ? "open" : "not_open"
-                    } lg:hidden`}
                     onClick={() => toggleNav(!isNavToggled)}
+                    className={`hamburger hamburger__squeeze ${isNavToggled ? "is_active" : ""} lg:hidden`}
+                    type="button"
                 >
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <span className="hamburger_box">
+                        <span className="hamburger_inner"></span>
+                    </span>
                 </button>
                 <div
                     className={`navbar ${
@@ -109,7 +109,7 @@ export default function Header() {
                             >
                                 Obra
                             </Link>
-                            <ul className="flex flex-col gap-2 ml-4 mt-2 block md:hidden">
+                            <ul className="flex flex-col gap-2 ml-4 mt-2 block lg:hidden">
                                 <li>
                                     <Link
                                         className="hover:text-primary-700"
@@ -155,7 +155,7 @@ export default function Header() {
                     <Menu>
                         <Menu.Button
                             className="flex items-center justify-center"
-                            onClick={() => toggleUserPanel(!userPanel)}
+                            onClick={() => { toggleUserPanel(!userPanel); toggleNav(false)}}
                         >
                             <div className="items-center gap-1 self-start hover:text-primary-700 hidden ">
                                 <span>
@@ -188,14 +188,14 @@ export default function Header() {
                             </svg>
                         </Menu.Button>
                         <Menu.Items
-                            className="absolute flex flex-col items-center justify-center rounded-md mx-4 mt-4
-                                            top-10 right-0 border border-neutral-100 overflow-hidden shadow-lg z-20 
-                                            bg-neutral-200 md:mx-10 lg:mx-14 xl:mx-24 max-w-full"
+                            className="absolute flex flex-col items-center justify-center rounded-md 
+                                            top-14 right-0 border border-neutral-200 overflow-hidden shadow-lg z-20 
+                                            bg-neutral-100 mx-4 md:mx-10 lg:mx-14 xl:mx-24 sm:min-w-96 max-w-full"
                         >
                             <Menu.Item>
                                 <div className="flex flex-col gap-5 p-4 max-h-96 overflow-y-scroll">
                                     {notifications &&
-                                        notifications.length > 0 &&
+                                        notifications.length > 0 ?
                                         notifications
                                             .sort((a, b) =>
                                                 a.publishDate < b.publishDate
@@ -230,14 +230,14 @@ export default function Header() {
                                                         {noti.comment}
                                                     </p>
                                                 </Link>
-                                            ))}
+                                            )) : <span className="py-2">No hay notificaciones</span>}
                                 </div>
                             </Menu.Item>
 
                             <Menu.Item>
                                 <div
-                                    className="flex justify-center bg-neutral-800 text-lg font-bold py-2 
-                                                text-white hover:text-neutral-200 w-full"
+                                    className="flex justify-center bg-neutral-800 text-lg w-full py-2 
+                                                text-white font-bold hover:bg-neutral-700"
                                 >
                                     <button
                                         className="w-full"

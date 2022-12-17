@@ -28,8 +28,9 @@ const Obra: NextPage<ObraProps> = ({ posts, categories }) => {
 
             <Header />
 
-            <div className="flex flex-col gap-8 text-primary-900 mx-4 my-12 md:mx-10 lg:mx-14 xl:mx-44 mb-auto">
-                <div className="flex flex-col gap-10 my-6">
+            <div className="flex flex-col gap-6 text-primary-900 mx-4 my-8 md:mx-10 lg:mx-14 xl:mx-44">
+                <h1 className="font-asap text-3xl">Últimas publicaciones</h1>
+                <div className="flex flex-col gap-4 my-6">
                     {visiblePosts && visiblePosts.length > 0 && 
                         visiblePosts.map((post, i) => (
                             <div key={i} className="group flex flex-col gap-3">
@@ -37,14 +38,14 @@ const Obra: NextPage<ObraProps> = ({ posts, categories }) => {
                                     <h2 className="font-asap text-2xl group-hover:text-primary-700">{post.title}</h2>
                                 </Link>
                                 <Link href={`/obra/${post.slug}`}>
-                                    <p className="font-roboto text-md text-primary-700 leading-8">
+                                    <p className="font-roboto font-light text-md text-primary-700 leading-8">
                                         {post.content
                                             .split(" ")
                                             .slice(0, 35)
                                             .join(" ")}...</p>
                                 </Link>
                                 <Link className="flex gap-2 items-center justify-end text-sm text-secondary-600 hover:text-secondary-400" href={`/obra/${post.slug}`}>
-                                    <span>Ver mas</span>
+                                    <span>Seguir leyendo</span>
                                     <svg className="w-4 h-4 mt-0.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
                                     </svg>
