@@ -20,7 +20,7 @@ export default function SobreMi() {
             <section className="flex flex-col-reverse gap-10 mx-4 h-full my-10 lg:gap-20 lg:my-20 lg:flex-row md:mx-10 lg:mx-14 xl:mx-44">
                 <div className="relative w-full h-96 lg:h-auto lg:w-5/12">
                     <Image
-                        src="/veronica-metelico1.jpg"
+                        src="/veronica-metelico.jpeg"
                         fill
                         priority
                         alt="Imagen de Verónica"

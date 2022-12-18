@@ -19,7 +19,7 @@ const Comments = ({ comment, replies, deleteComment, likeComment }: CommentsProp
     const [showingReplies, toggleReplies] = useState<boolean>(false);
 
     return (
-        <div className='flex flex-col gap-6 mt-8 group' key={comment.id}>
+        <div className='flex flex-col gap-6 mt-8' key={comment.id}>
             <Comment comment={comment} likeComment={likeComment} deleteComment={deleteComment} />
             
             {replies && replies.length > 0 && 

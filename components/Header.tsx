@@ -103,11 +103,19 @@ export default function Header() {
                         <li>
                             <Link
                                 href="/obra"
-                                className="hover:text-primary-700 group"
+                                className="peer flex items-center gap-1 hover:text-primary-700"
                             >
-                                Obra
+                                <span>Obra</span>
+                                <svg
+                                    fill="currentColor"
+                                    className="h-3 hidden lg:block"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 512 512"
+                                >
+                                    <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
+                                </svg>
                             </Link>
-                            <ul className="flex flex-col gap-2 ml-4 mt-2 block lg:hidden">
+                            <ul className="flex flex-col gap-2 ml-4 pt-2 lg:ml-0 lg:absolute lg:hidden lg:peer-hover:flex lg:hover:flex">
                                 <li>
                                     <Link
                                         className="hover:text-primary-700"
@@ -155,21 +163,6 @@ export default function Header() {
                             className="flex items-center justify-center"
                             onClick={() => { toggleUserPanel(!userPanel); toggleNav(false)}}
                         >
-                            <div className="items-center gap-1 self-start hover:text-primary-700 hidden ">
-                                <span>
-                                    {notifications.length > 0
-                                        ? `(${notifications.length}) ${user.displayName}`
-                                        : `${user.displayName}`}
-                                </span>
-                                <svg
-                                    fill="currentColor"
-                                    className="h-3"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 512 512"
-                                >
-                                    <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
-                                </svg>
-                            </div>
                             <svg
                                 className="h-5"
                                 fill="currentColor"
@@ -184,6 +177,11 @@ export default function Header() {
                                     d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
                                 />
                             </svg>
+                            {notifications && notifications.length > 0 &&
+                                <span className="flex absolute h-1.5 w-1.5 mt-1.5 ml-1.5">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500"></span>
+                                </span>}
                         </Menu.Button>
                         <Menu.Items
                             className="absolute flex flex-col items-center justify-center rounded-md 

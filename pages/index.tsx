@@ -18,7 +18,7 @@ const Home: NextPage = () => {
             <div className="flex flex-col-reverse md:grid md:grid-cols-2 h-screen text-primary-900">
                 <div className="relative h-full">
                     <Image
-                        src="/veronica-metelico1.jpg"
+                        src="/veronica-metelico.jpeg"
                         fill
                         priority
                         alt="Imagen de Verónica"

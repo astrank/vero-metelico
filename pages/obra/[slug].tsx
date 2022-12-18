@@ -40,6 +40,14 @@ const Obra: NextPage<ObraProps> = ({ post }) => {
 
     const deleteComment = async (id: string) => {
         await deleteDoc(doc(db, "posts", post.slug, "comments", id));
+
+        // Delete subcomments
+        comments
+            .filter(comment => comment.parent == id)
+            .map(async comment => {
+                await deleteDoc(doc(db, "posts", post.slug, "comments", comment.id));
+            });
+
     };
 
     const likeComment = async (comment: CommentType) => {

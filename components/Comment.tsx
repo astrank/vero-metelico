@@ -15,8 +15,9 @@ type CommentProps = {
 }
 
 const Comment = ({ comment, deleteComment, likeComment }: CommentProps) => {
-    const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [isReplyBoxOpen, toggleReplyBox] = useState<boolean>(false)
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isReplyBoxOpen, toggleReplyBox] = useState<boolean>(false);
+    const [isAdminBoxOpen, toggleAdminBox] = useState<boolean>(false);
 
     const { user, isAdmin } = useAuth();
 
@@ -47,11 +48,20 @@ const Comment = ({ comment, deleteComment, likeComment }: CommentProps) => {
                     <span className='text-primary-700'> · {dayjs(comment.publishDate).locale("es").fromNow()}</span>
                 </div>
                 {(comment.userId === user?.uid || isAdmin) &&
-                    <button className="hidden justify-self-end group-hover:block" onClick={() => deleteComment(comment.id)} >
-                        <svg className="h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
-                        </svg>
-                    </button>}
+                    <div>
+                        <button 
+                            className={`block justify-self-end ${isAdminBoxOpen ? "md:block" : "md:hidden md:group-hover:block"}`}
+                            onClick={() => toggleAdminBox(!isAdminBoxOpen)}>
+                            <svg className="h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+                            </svg>
+                        </button>
+                        {isAdminBoxOpen &&
+                            <div className="absolute mt-2 flex flex-col justify-start py-1 text-sm rounded overflow-hidden bg-neutral-800 text-white right-6 md:right-12 lg:right-44">
+                                <button className='px-3 py-2 hover:bg-neutral-700' onClick={() => deleteComment(comment.id)}>Eliminar Comentario</button>
+                                <button className='px-3 py-2 w-full text-start hover:bg-neutral-700'>Bloquear usuario</button>
+                            </div>}
+                    </div>}
             </div>
             <p>{comment.comment}</p>
             <div className="flex gap-4 items-center">
