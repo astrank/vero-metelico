@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Post } from "../types/Post";
 import { Category } from "../types/Category";
 import { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type ObraProps = {
     posts: Post[],
@@ -44,7 +44,7 @@ const Obra: NextPage<ObraProps> = ({ posts, categories }) => {
                                             .slice(0, 35)
                                             .join(" ")}...</p>
                                 </Link>
-                                <Link className="flex gap-2 items-center justify-end text-sm text-secondary-600 hover:text-secondary-400" href={`/obra/${post.slug}`}>
+                                <Link className="flex gap-2 items-center self-end text-sm text-secondary-600 hover:text-secondary-400" href={`/obra/${post.slug}`}>
                                     <span>Seguir leyendo</span>
                                     <svg className="w-4 h-4 mt-0.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />

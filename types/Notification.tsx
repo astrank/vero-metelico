@@ -1,4 +1,5 @@
 export type Notification = {
+    id: string,
     author: string,
     authorId: string,
     comment: string,

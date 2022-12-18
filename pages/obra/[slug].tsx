@@ -13,7 +13,7 @@ import Footer from "../../components/Footer";
 import CommentInput from "../../components/CommentInput";
 import Comments from "../../components/Comments";
 
-import { getFirestore, collection, onSnapshot, doc, query, arrayUnion, arrayRemove, deleteDoc, updateDoc } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot, doc, where, query, arrayUnion, arrayRemove, deleteDoc, updateDoc } from "firebase/firestore";
 import { initializeFirebase } from "../../utils/Firebase";
 import { useAuth } from "../../utils/Auth";
 
@@ -23,12 +23,12 @@ type ObraProps = {
 
 const Obra: NextPage<ObraProps> = ({ post }) => {
     const app = initializeFirebase();
-    const firestore = getFirestore(app);
+    const db = getFirestore(app);
     const [comments, setComments] = useState<CommentType[]>([]);
     const { user, isAdmin } = useAuth();
     
     useEffect(() => {
-        const q = query(collection(firestore, "posts", post.slug, "comments"));
+        const q = query(collection(db, "posts", post.slug, "comments"));
         onSnapshot(q, (commentsQuery) => {
             setComments(commentsQuery.docs.map((c) => {
                 let comment = c.data();
@@ -39,16 +39,16 @@ const Obra: NextPage<ObraProps> = ({ post }) => {
     }, [])
 
     const deleteComment = async (id: string) => {
-        await deleteDoc(doc(firestore, "posts", post.slug, "comments", id))
+        await deleteDoc(doc(db, "posts", post.slug, "comments", id));
     };
 
     const likeComment = async (comment: CommentType) => {
         if(!comment.likes.includes(user.uid)) {
-            await updateDoc(doc(firestore, "posts", post.slug, "comments", comment.id), {
+            await updateDoc(doc(db, "posts", post.slug, "comments", comment.id), {
                 likes: arrayUnion(user.uid)
             });
         } else {
-            await updateDoc(doc(firestore, "posts", post.slug, "comments", comment.id), {
+            await updateDoc(doc(db, "posts", post.slug, "comments", comment.id), {
                 likes: arrayRemove(user.uid)
             });
         }

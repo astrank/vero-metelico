@@ -46,22 +46,41 @@ const CommentInput = ({ slug, title, comment, closeReplyBox }: CommentInputProps
                             comment.parent : 
                             comment.id : 
                         false,
-                replies: [],
+                reply: comment ? true : false,
+                notifications: [uid],
             });
 
-            await addDoc(collection(db, "notifications", uid, "comment"), {
-                type: comment ? "new-reply" : "new-comment",
-                authorId: user.uid,
-                author: user.displayName,
-                comment: newComment,
-                commentId: docRef.id,
-                post: slug,
-                postTitle: title,
-                publishDate: Date.now(),
-                watched: false,
-            });
+            if(uid !== user.uid) {
+                await addDoc(collection(db, "notifications", uid, "comment"), {
+                    type: comment ? "new-reply" : "new-comment",
+                    authorId: user.uid,
+                    author: user.displayName,
+                    comment: newComment,
+                    commentId: docRef.id,
+                    post: slug,
+                    postTitle: title,
+                    publishDate: Date.now(),
+                });
+            }
+            
+            if (comment && user.uid !== comment.userId) {
+                await addDoc(collection(db, "notifications", comment.userId, "comment"), {
+                    type: comment ? "new-reply" : "new-comment",
+                    authorId: user.uid,
+                    author: user.displayName,
+                    comment: newComment,
+                    commentId: docRef.id,
+                    post: slug,
+                    postTitle: title,
+                    publishDate: Date.now(),
+                });
+            }
 
             writeNewComment("");
+            
+            if(closeReplyBox) {
+                closeReplyBox();
+            }
         } catch (e) {
             console.error("Error adding document: ", e);
         }

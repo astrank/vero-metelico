@@ -1,11 +1,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import { useAuth } from "../utils/Auth";
 import { Dialog } from "@headlessui/react";
 import Login from "./Login";
 import { Menu } from "@headlessui/react";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Notification } from "../types/Notification";
 
 import {
@@ -15,11 +13,9 @@ import {
     query,
 } from "firebase/firestore";
 import { initializeFirebase } from "../utils/Firebase";
-import { spawn } from "child_process";
 
 export default function Header() {
     const [isNavToggled, toggleNav] = useState(false);
-    const router = useRouter();
     const { user, logout } = useAuth();
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [userPanel, toggleUserPanel] = useState<boolean>(false);
@@ -44,7 +40,9 @@ export default function Header() {
             onSnapshot(q, (notiQuery) => {
                 setNotifications(
                     notiQuery.docs.map((n) => {
-                        return n.data() as Notification;
+                        let notification = n.data();
+                        notification.id = n.id;
+                        return notification as Notification;
                     })
                 );
             });
@@ -193,7 +191,10 @@ export default function Header() {
                                             bg-neutral-100 mx-4 md:mx-10 lg:mx-14 xl:mx-24 sm:min-w-96 max-w-full"
                         >
                             <Menu.Item>
-                                <div className="flex flex-col gap-5 p-4 max-h-96 overflow-y-scroll">
+                                <span className="py-1 bg-neutral-300 font-bold px-4 w-full">{user.displayName}</span>
+                            </Menu.Item>
+                            <Menu.Item>
+                                <div className="flex flex-col max-h-96 overflow-y-scroll">
                                     {notifications &&
                                         notifications.length > 0 ?
                                         notifications
@@ -207,9 +208,9 @@ export default function Header() {
                                             )
                                             .map((noti) => (
                                                 <Link
-                                                    className="flex flex-col gap-2"
+                                                    className="flex flex-col p-4 border-b border-neutral-200 gap-2 hover:bg-neutral-200"
                                                     href={`/obra/${noti.post}#${noti.commentId}`}
-                                                    key={noti.commentId}
+                                                    key={noti.id}
                                                 >
                                                     <div className="flex justify-between gap-4">
                                                         <span className="font-bold text-md max-w-xs text-primary-900">
@@ -230,7 +231,7 @@ export default function Header() {
                                                         {noti.comment}
                                                     </p>
                                                 </Link>
-                                            )) : <span className="py-2">No hay notificaciones</span>}
+                                            )) : <span className="py-6">No hay notificaciones</span>}
                                 </div>
                             </Menu.Item>
 

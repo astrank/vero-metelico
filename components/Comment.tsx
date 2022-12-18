@@ -44,7 +44,7 @@ const Comment = ({ comment, deleteComment, likeComment }: CommentProps) => {
             <div className="flex justify-between items-center">
                 <div>
                     <span className='font-bold'>{comment.author}</span>
-                    <span> · {dayjs(comment.publishDate).locale("es").fromNow()}</span>
+                    <span className='text-primary-700'> · {dayjs(comment.publishDate).locale("es").fromNow()}</span>
                 </div>
                 {(comment.userId === user?.uid || isAdmin) &&
                     <button className="hidden justify-self-end group-hover:block" onClick={() => deleteComment(comment.id)} >
