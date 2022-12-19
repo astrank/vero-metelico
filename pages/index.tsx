@@ -2,8 +2,11 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 
 const Home: NextPage = () => {
+    const [isNavToggled, toggleNav] = useState(false);
+
     return (
         <>
             <Head>
@@ -25,27 +28,58 @@ const Home: NextPage = () => {
                         className="object-cover object-top"
                     />
                 </div>
-                <div className="flex flex-col justify-center items-center m-6 my-8 gap-14 md:justify-between">
-                    <nav className="tracking-wide">
-                        <ul
-                            className="flex flex-wrap justify-center gap-4 text-center lg:flex-row lg:text-start lg:gap-6"
-                            role="List"
-                            aria-label="Barra de Navegación"
+                <div className="flex flex-col justify-center items-center mx-10 my-8 gap-10 md:relative md:justify-between md:mx-0">
+                    <nav className="tracking-wide flex w-full justify-end lg:justify-center">
+                        <button
+                            onClick={() => toggleNav(!isNavToggled)}
+                            className={`hamburger hamburger__squeeze ${isNavToggled ? "is_active" : ""} md:px-8 lg:hidden`}
+                            type="button"
                         >
-                            <Link href="/sobre-mi">
-                                <li>Sobre mí</li>
-                            </Link>
-                            <Link href="/obra" className="hover:text-primary-700">
-                                <li>Obra</li>
-                            </Link>
-                            <Link href="/invitados" className="hover:text-primary-700">
-                                <li>Invitados</li>
-                            </Link>
-                            <li>Escritura grupal</li>
-                            <Link href="/contacto" className="hover:text-primary-700">
-                                <li>Contacto</li>
-                            </Link>
-                        </ul>
+                            <span className="hamburger_box">
+                                <span className="hamburger_inner"></span>
+                            </span>
+                        </button>
+                        <div className={`navbar ${isNavToggled ? "open" : ""} flex gap-2 lg:gap-6`}>
+                            <ul
+                                className="flex flex-col justify-center gap-2 text-start px-4 md:px-8 lg:flex-row lg:text-start lg:gap-6"
+                                role="List"
+                                aria-label="Barra de Navegación"
+                            >
+                                <li>
+                                    <Link href="/sobre-mi">
+                                        Sobre mí
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link href="/obra" className="hover:text-primary-700">Obra</Link>
+                                    <ul className="flex flex-col gap-2 ml-4 pt-2 lg:ml-0 lg:absolute lg:hidden lg:peer-hover:flex lg:hover:flex">
+                                        <li>
+                                            <Link
+                                                className="hover:text-primary-700"
+                                                href="/cuentos"
+                                            >
+                                                Cuentos
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link
+                                                className="hover:text-primary-700"
+                                                href="/reflexiones"
+                                            >
+                                                Reflexiones
+                                            </Link>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <Link href="/invitados" className="hover:text-primary-700">Invitados</Link>
+                                </li>
+                                <li>Escritura grupal</li>
+                                <li>
+                                    <Link href="/contacto" className="hover:text-primary-700">Contacto</Link>
+                                </li>
+                            </ul>
+                        </div>
                     </nav>
                     <div className="flex flex-col justify-center items-center gap-10">
                         <svg

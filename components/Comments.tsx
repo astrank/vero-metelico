@@ -1,26 +1,21 @@
 import { useState } from 'react'
 import Login from "./Login"
 import { Comment as CommentType } from "../types/Comment";
-import { User } from "firebase/auth";
 import { Dialog } from '@headlessui/react'
 import Comment from "./Comment";
 
 type CommentsProps = {
     comment: CommentType,
     replies: CommentType[],
-    user: User,
-    isAdmin: boolean,
-    likeComment: (comment: CommentType) => {},
-    deleteComment: (id: string) => {}
 }
 
-const Comments = ({ comment, replies, deleteComment, likeComment }: CommentsProps) => {
+const Comments = ({ comment, replies }: CommentsProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [showingReplies, toggleReplies] = useState<boolean>(false);
 
     return (
         <div className='flex flex-col gap-6 mt-8' key={comment.id}>
-            <Comment comment={comment} likeComment={likeComment} deleteComment={deleteComment} />
+            <Comment comment={comment} />
             
             {replies && replies.length > 0 && 
                 <button 
@@ -35,7 +30,7 @@ const Comments = ({ comment, replies, deleteComment, likeComment }: CommentsProp
             {replies && replies.length > 0 && showingReplies &&
                 replies.map(c => (
                     <div className="ml-6" key={c.id}>
-                        <Comment comment={c} likeComment={likeComment} deleteComment={deleteComment} />
+                        <Comment comment={c} />
                     </div>
                 ))}
 

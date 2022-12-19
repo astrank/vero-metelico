@@ -4,30 +4,27 @@ import { Comment as CommentType } from "../types/Comment";
 import Login from "./Login"
 import CommentInput from './CommentInput';
 
-import { getFirestore, collection, addDoc, onSnapshot, doc, query, arrayUnion, arrayRemove, deleteDoc, updateDoc } from "firebase/firestore";
-import { initializeFirebase } from "../utils/Firebase";
 import { useAuth } from "../utils/Auth";
+import { useComments } from "../utils/Comments"
 
 type CommentProps = {
     comment: CommentType,
-    likeComment: (comment: CommentType) => {},
-    deleteComment: (id: string) => {},
 }
 
-const Comment = ({ comment, deleteComment, likeComment }: CommentProps) => {
+const Comment = ({ comment }: CommentProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isReplyBoxOpen, toggleReplyBox] = useState<boolean>(false);
     const [isAdminBoxOpen, toggleAdminBox] = useState<boolean>(false);
+    const [deleteCommentAlert, toggleDeleteCommentAlert] = useState<boolean>(false);
 
     const { user, isAdmin } = useAuth();
+    const { likeComment, deleteComment } = useComments();
 
     const dayjs = require('dayjs')
     const relativeTime = require('dayjs/plugin/relativeTime')
     require('dayjs/locale/es')
     dayjs.extend(relativeTime);
 
-    const app = initializeFirebase();
-    const db = getFirestore(app);
     const uid = "7NXk8PiCwggyA5vWYdJT5lVTxg22";
 
     useEffect(() => {
@@ -58,8 +55,8 @@ const Comment = ({ comment, deleteComment, likeComment }: CommentProps) => {
                         </button>
                         {isAdminBoxOpen &&
                             <div className="absolute mt-2 flex flex-col justify-start py-1 text-sm rounded overflow-hidden bg-neutral-800 text-white right-6 md:right-12 lg:right-44">
-                                <button className='px-3 py-2 hover:bg-neutral-700' onClick={() => deleteComment(comment.id)}>Eliminar Comentario</button>
-                                <button className='px-3 py-2 w-full text-start hover:bg-neutral-700'>Bloquear usuario</button>
+                                <button className='px-3 py-2 hover:bg-neutral-700' onClick={() => {toggleDeleteCommentAlert(true); toggleAdminBox(false)}}>Eliminar Comentario</button>
+                                <button disabled className='px-3 py-2 w-full text-neutral-500 text-start'>Bloquear usuario</button>
                             </div>}
                     </div>}
             </div>
@@ -77,6 +74,7 @@ const Comment = ({ comment, deleteComment, likeComment }: CommentProps) => {
             {isReplyBoxOpen &&
                 <CommentInput comment={comment} closeReplyBox={closeReplyBox} title={comment.postTitle} slug={comment.post} />}
 
+            {/* Login panel */}
             <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
                 {/* Overlay */}
                 <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
@@ -84,6 +82,20 @@ const Comment = ({ comment, deleteComment, likeComment }: CommentProps) => {
                 <div className="fixed inset-0 flex items-center justify-center p-4">
                     <Dialog.Panel className="mx-auto bg-white p-14">
                         <Login />
+                    </Dialog.Panel>
+                </div>
+            </Dialog>
+
+            {/* Delete confirmation */}
+            <Dialog open={deleteCommentAlert} onClose={() => toggleDeleteCommentAlert(false)}>
+                <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+                <div className='fixed inset-0 flex items-center justify-center p-4'>
+                    <Dialog.Panel className="flex flex-col gap-6 p-4 text-sm bg-neutral-800 text-white rounded">
+                            <span>¿Elminar comentario permanentemente?</span>
+                            <div className='flex self-end'>
+                                <button className='p-2 rounded hover:bg-neutral-700' onClick={() => toggleDeleteCommentAlert(false)}>Cancelar</button>
+                                <button className='p-2 rounded hover:bg-neutral-700' onClick={() => deleteComment(comment.id, comment.post)}>Confirmar</button>
+                            </div>
                     </Dialog.Panel>
                 </div>
             </Dialog>

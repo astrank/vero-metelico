@@ -7,7 +7,7 @@ export type Comment = {
     comment: string,
     publishDate: string,
     likes: string[],
-    reply: boolean,
-    parent: boolean | string,
+    isReply: boolean,
+    parent: false | string,
     replies: string[],
 }

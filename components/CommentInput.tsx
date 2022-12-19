@@ -4,9 +4,8 @@ import { Comment as CommentType } from "../types/Comment";
 import Login from "./Login"
 import Button from "./Button"
 
-import { getFirestore, collection, addDoc, onSnapshot, doc, query, arrayUnion, arrayRemove, deleteDoc, updateDoc } from "firebase/firestore";
-import { initializeFirebase } from "../utils/Firebase";
 import { useAuth } from "../utils/Auth";
+import { useComments } from "../utils/Comments";
 
 type CommentInputProps = {
     slug: string,
@@ -16,11 +15,10 @@ type CommentInputProps = {
 }
 
 const CommentInput = ({ slug, title, comment, closeReplyBox }: CommentInputProps) => {
-    const app = initializeFirebase();
-    const db = getFirestore(app);
     const { user } = useAuth();
     const uid = "7NXk8PiCwggyA5vWYdJT5lVTxg22";
 
+    const { postComment, replyComment } = useComments();
     const [loginDialog, toggleLoginDialog] = useState(false);
     const [newComment, writeNewComment] = useState<string>("");
     const [componentVisibility, toggleComponentVisibility] = useState<boolean>(true);
@@ -31,64 +29,20 @@ const CommentInput = ({ slug, title, comment, closeReplyBox }: CommentInputProps
         }
     }, [user])
 
-    const postComment = async () => {
+    const handlePostComment = async () => {
         toggleComponentVisibility(false);
-
-        try {
-            const docRef = await addDoc(collection(db, "posts", slug, "comments"), {
-                userId: user.uid,
-                author: user.displayName,
-                comment: newComment,
-                post: slug,
-                postTitle: title,
-                publishDate: Date.now(),
-                likes: [],
-                parent: 
-                    comment ? 
-                        comment.parent ? 
-                            comment.parent : 
-                            comment.id : 
-                        false,
-                reply: comment ? true : false,
-                notifications: []
-            });
-            
-            if(uid !== user.uid) {
-                await addDoc(collection(db, "notifications", uid, "comment"), {
-                    type: comment ? "new-reply" : "new-comment",
-                    authorId: user.uid,
-                    author: user.displayName,
-                    comment: newComment,
-                    commentId: docRef.id,
-                    post: slug,
-                    postTitle: title,
-                    publishDate: Date.now(),
-                });
-            }
-            
-            if (comment && user.uid !== comment.userId) {
-                await addDoc(collection(db, "notifications", comment.userId, "comment"), {
-                    type: comment ? "new-reply" : "new-comment",
-                    authorId: user.uid,
-                    author: user.displayName,
-                    comment: newComment,
-                    commentId: docRef.id,
-                    post: slug,
-                    postTitle: title,
-                    publishDate: Date.now(),
-                });
-            }
-
-            writeNewComment("");
-            
-            if(closeReplyBox) {
-                closeReplyBox();
-            }
-
-            toggleComponentVisibility(true);
-        } catch (e) {
-            console.error("Error adding document: ", e);
+        
+        comment
+            ? replyComment(newComment, comment.post, comment.postTitle, comment.parent, comment.id)
+            : postComment(slug, newComment, title)
+        
+        writeNewComment("");
+        
+        if(closeReplyBox) {
+            closeReplyBox();
         }
+
+        toggleComponentVisibility(true);
     };
 
     return (
@@ -105,8 +59,8 @@ const CommentInput = ({ slug, title, comment, closeReplyBox }: CommentInputProps
                         {closeReplyBox &&
                             <Button text="Cancel" onClick={closeReplyBox} />}
                         <Button
-                            text="Comment"
-                            onClick={postComment}
+                            text={comment ? "Responder" : "Comentar"}
+                            onClick={handlePostComment}
                             disabled={!user || newComment.length < 1} />
                     </div>
                 </div> :
@@ -130,46 +84,3 @@ const CommentInput = ({ slug, title, comment, closeReplyBox }: CommentInputProps
 }
 
 export default CommentInput;
-
-
-
-    /*const replyComment = async () => {
-        if(comment) {
-            try {
-                const docRef = await addDoc(collection(db, "posts", slug, "comments"), {
-                    userId: user.uid,
-                    author: user.displayName,
-                    comment: newComment,
-                    post: slug,
-                    postTitle: title,
-                    publishDate: Date.now(),
-                    likes: [],
-                    reply: true,
-                    parent: comment.parent ? comment.parent : comment.id,
-                    replies: [],
-                });
-
-                if(!comment.replies.includes(docRef.id)) {
-                    await updateDoc(doc(db, "posts", slug, "comments", comment.id), {
-                        replies: arrayUnion(docRef.id)
-                    });
-                }
-
-                const notiRef = await addDoc(collection(db, "notifications", uid, "comment"), {
-                    type: "new-reply",
-                    authorId: user.uid,
-                    author: user.displayName,
-                    comment: newComment,
-                    commentId: docRef.id,
-                    post: comment.post,
-                    postTitle: comment.postTitle,
-                    publishDate: Date.now(),
-                    watched: false,
-                });
-
-                writeNewComment("");
-            } catch (e) {
-                console.error("Error adding document: ", e);
-            }
-        }
-    };*/

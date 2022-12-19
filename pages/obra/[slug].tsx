@@ -1,66 +1,31 @@
 import { useEffect, useState } from "react";
-import { GetStaticProps, GetStaticPaths, NextPage } from "next";
+import { GetStaticProps, GetStaticPaths, NextPage, GetServerSideProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import Markdown from "react-markdown";
 import posts from "../../public/data/posts.json";
+import { useComments } from "../../utils/Comments";
 
-import { Comment as CommentType } from "../../types/Comment";
 import { Post } from "../../types/Post";
+import { Comment as CommentType } from "../../types/Comment";
 
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import CommentInput from "../../components/CommentInput";
 import Comments from "../../components/Comments";
 
-import { getFirestore, collection, onSnapshot, doc, where, query, arrayUnion, arrayRemove, deleteDoc, updateDoc } from "firebase/firestore";
-import { initializeFirebase } from "../../utils/Firebase";
-import { useAuth } from "../../utils/Auth";
-
 type ObraProps = {
-    post: Post
+    post: Post,
 }
 
 const Obra: NextPage<ObraProps> = ({ post }) => {
-    const app = initializeFirebase();
-    const db = getFirestore(app);
-    const [comments, setComments] = useState<CommentType[]>([]);
-    const { user, isAdmin } = useAuth();
+    const { comments, getComments, unsubscribe } = useComments();
     
     useEffect(() => {
-        const q = query(collection(db, "posts", post.slug, "comments"));
-        onSnapshot(q, (commentsQuery) => {
-            setComments(commentsQuery.docs.map((c) => {
-                let comment = c.data();
-                comment.id = c.id;
-                return comment as CommentType
-            }));
-        });
+        getComments(post.slug);
+
+        return () => {unsubscribe && unsubscribe()}
     }, [])
-
-    const deleteComment = async (id: string) => {
-        await deleteDoc(doc(db, "posts", post.slug, "comments", id));
-
-        // Delete subcomments
-        comments
-            .filter(comment => comment.parent == id)
-            .map(async comment => {
-                await deleteDoc(doc(db, "posts", post.slug, "comments", comment.id));
-            });
-
-    };
-
-    const likeComment = async (comment: CommentType) => {
-        if(!comment.likes.includes(user.uid)) {
-            await updateDoc(doc(db, "posts", post.slug, "comments", comment.id), {
-                likes: arrayUnion(user.uid)
-            });
-        } else {
-            await updateDoc(doc(db, "posts", post.slug, "comments", comment.id), {
-                likes: arrayRemove(user.uid)
-            });
-        }
-    };
 
     return (
         <div className="min-h-screen">
@@ -95,15 +60,11 @@ const Obra: NextPage<ObraProps> = ({ post }) => {
                     {comments && comments.length > 0 &&
                         comments
                             .sort((a,b) => (a.publishDate > b.publishDate) ? 1 : ((b.publishDate > a.publishDate) ? -1 : 0))
-                            .map(comment => !comment.reply && (
+                            .map(comment => !comment.isReply && (
                                 <Comments
                                     key={comment.id}
                                     comment={comment}
-                                    replies={comments.filter(c => c.reply && c.parent === comment.id) || []}
-                                    user={user}
-                                    isAdmin={isAdmin}
-                                    deleteComment={deleteComment}
-                                    likeComment={likeComment} />
+                                    replies={comments.filter(c => c.isReply && c.parent === comment.id) || []}/>
                                 ))}
                 </div>
             </div>
