@@ -38,6 +38,10 @@ export function CommentsProvider({ children }: {children : React.ReactNode}) {
         });
     }
 
+    const getAllComments = async (slug: string) => {
+        
+    }
+
     const postComment = async (slug: string, comment: string, post: string) => {
         if(user) {
             try {
