@@ -90,8 +90,8 @@ const Comment = ({ comment }: CommentProps) => {
             <Dialog open={deleteCommentAlert} onClose={() => toggleDeleteCommentAlert(false)}>
                 <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
                 <div className='fixed inset-0 flex items-center justify-center p-4'>
-                    <Dialog.Panel className="flex flex-col gap-6 p-4 text-sm bg-neutral-800 text-white rounded">
-                            <span>¿Elminar comentario permanentemente?</span>
+                    <Dialog.Panel className="flex flex-col gap-4 p-2 text-sm bg-neutral-800 text-white rounded">
+                            <span className='p-2'>¿Elminar comentario permanentemente?</span>
                             <div className='flex self-end'>
                                 <button className='p-2 rounded hover:bg-neutral-700' onClick={() => toggleDeleteCommentAlert(false)}>Cancelar</button>
                                 <button className='p-2 rounded hover:bg-neutral-700' onClick={() => deleteComment(comment.id, comment.post)}>Confirmar</button>
