@@ -2,3 +2,4 @@
 5. bloquear usuario
 6. instagram
 7. achicar texto en obra en mobile
+8. cuentas email

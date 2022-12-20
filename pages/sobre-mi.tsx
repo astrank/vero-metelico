@@ -2,6 +2,7 @@ import Head from "next/head";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Image from "next/image";
+import Instagram from "../components/Instagram";
 
 export default function SobreMi() {
     return (
@@ -60,6 +61,10 @@ export default function SobreMi() {
                     <p className="text-justify">Aquí les dejo mis
                         cuentos y mis reflexiones, que son por supuesto, yo misma.</p>
                 </div>
+            </section>
+
+            <section>
+                <Instagram />
             </section>
 
             <Footer />
