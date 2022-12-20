@@ -1,12 +1,9 @@
 export type Notification = {
-    id: string,
-    author: string,
-    authorId: string,
+    notification: string,
     comment: string,
     commentId: string,
+    author: string,
+    userId: string,
     post: string,
-    postTitle: string,
     publishDate: string,
-    type: string,
-    watched: boolean, 
 }

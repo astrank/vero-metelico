@@ -33,7 +33,7 @@ const CommentInput = ({ slug, title, comment, closeReplyBox }: CommentInputProps
         toggleComponentVisibility(false);
         
         comment
-            ? replyComment(newComment, comment.post, comment.postTitle, comment.parent, comment.id)
+            ? replyComment(newComment, comment.post, comment.postTitle, comment.parent, comment.id, comment.userId)
             : postComment(slug, newComment, title)
         
         writeNewComment("");

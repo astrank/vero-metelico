@@ -8,6 +8,8 @@ export type Comment = {
     publishDate: string,
     likes: string[],
     isReply: boolean,
+    replyingTo: boolean,
     parent: false | string,
     replies: string[],
+    notifications: string[],
 }

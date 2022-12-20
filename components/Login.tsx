@@ -48,14 +48,15 @@ const Login = () => {
             </button>
             <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4 w-full mt-8">
                 <div className="flex flex-col gap-2">
-                    <label htmlFor="email" className="font-darker_grotesque text-lg">
+                    <label htmlFor="email">
                         Email
                     </label>
                     <input
                         type="text"
                         {...formik.getFieldProps("email")}
                         id="email"
-                        className="border outline-none h-8 border-primary-700"
+                        className="bg-neutral-200 border outline-none h-8 border-primary-700"
+                        disabled
                     />
                     {formik.errors.email && formik.touched.email && (
                         <span
@@ -67,14 +68,15 @@ const Login = () => {
                     )}
                 </div>
                 <div className="flex flex-col gap-2">
-                    <label htmlFor="password" className="font-darker_grotesque text-lg">
+                    <label htmlFor="password">
                         Contraseña
                     </label>
                     <input
                         type="password"
                         id="password"
                         {...formik.getFieldProps("password")}
-                        className="border outline-none h-8 border-primary-700"
+                        className="bg-neutral-200 border outline-none h-8 border-primary-700"
+                        disabled
                     />
                     {formik.errors.password && formik.touched.password && (
                         <span

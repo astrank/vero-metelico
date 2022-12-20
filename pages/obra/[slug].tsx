@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { GetStaticProps, GetStaticPaths, NextPage, GetServerSideProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import Markdown from "react-markdown";
 import posts from "../../public/data/posts.json";
 import { useComments } from "../../utils/Comments";
+
+import { getFirestore, collection, addDoc, onSnapshot, doc, getDocs, query, arrayUnion, arrayRemove, deleteDoc, updateDoc } from "firebase/firestore";
+import { initializeFirebase } from "../../utils/Firebase";
 
 import { Post } from "../../types/Post";
 import { Comment as CommentType } from "../../types/Comment";
@@ -19,8 +22,8 @@ type ObraProps = {
 }
 
 const Obra: NextPage<ObraProps> = ({ post }) => {
-    const { comments, getComments, unsubscribe } = useComments();
-    
+    const { comments, getComments, getAllComments, unsubscribe } = useComments();
+
     useEffect(() => {
         getComments(post.slug);
 
@@ -75,9 +78,11 @@ const Obra: NextPage<ObraProps> = ({ post }) => {
 }
 
 export const getStaticProps: GetStaticProps = (context) => {
+    const post = posts.find((post) => post.slug === context.params?.slug)
+   
     return {
         props: {
-            post: posts.find((post) => post.slug === context.params?.slug),
+            post: post,
         },
     };
 };

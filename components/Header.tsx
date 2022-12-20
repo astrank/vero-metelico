@@ -5,6 +5,7 @@ import { Dialog } from "@headlessui/react";
 import Login from "./Login";
 import { Menu } from "@headlessui/react";
 import { Notification } from "../types/Notification";
+import { useComments } from "../utils/Comments"
 
 import {
     getFirestore,
@@ -13,6 +14,7 @@ import {
     query,
 } from "firebase/firestore";
 import { initializeFirebase } from "../utils/Firebase";
+import { Unsubscribe } from "firebase/auth";
 
 export default function Header() {
     const [isNavToggled, toggleNav] = useState(false);
@@ -20,7 +22,7 @@ export default function Header() {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [userPanel, toggleUserPanel] = useState<boolean>(false);
     const [notifications, setNotifications] = useState<Notification[]>([]);
-    const uid = "7NXk8PiCwggyA5vWYdJT5lVTxg22";
+    const { deleteNotification } = useComments();
 
     const dayjs = require("dayjs");
     const relativeTime = require("dayjs/plugin/relativeTime");
@@ -31,13 +33,15 @@ export default function Header() {
     const db = getFirestore(app);
 
     useEffect(() => {
+        let unsubscribe: Unsubscribe | false = false;
+
         if (user) {
             setIsOpen(false);
-
+            console.log(user.uid)
             const q = query(
-                collection(db, "notifications", user.uid, "comment")
+                collection(db, "users", user.uid, "notifications")
             );
-            onSnapshot(q, (notiQuery) => {
+            unsubscribe = onSnapshot(q, (notiQuery) => {
                 setNotifications(
                     notiQuery.docs.map((n) => {
                         let notification = n.data();
@@ -47,6 +51,8 @@ export default function Header() {
                 );
             });
         }
+
+        return () => {unsubscribe && unsubscribe()}
     }, [user]);
 
     return (
@@ -192,7 +198,7 @@ export default function Header() {
                                 <span className="py-1 bg-neutral-300 font-bold px-4 w-full">{user.displayName}</span>
                             </Menu.Item>
                             <Menu.Item>
-                                <div className="flex flex-col max-h-96 overflow-y-scroll">
+                                <div className="flex flex-col max-h-96 overflow-y-scroll w-full">
                                     {notifications &&
                                         notifications.length > 0 ?
                                         notifications
@@ -205,18 +211,11 @@ export default function Header() {
                                                     : 0
                                             )
                                             .map((noti) => (
-                                                <Link
-                                                    className="flex flex-col p-4 border-b border-neutral-200 gap-2 hover:bg-neutral-200"
-                                                    href={`/obra/${noti.post}#${noti.commentId}`}
-                                                    key={noti.id}
+                                                <div
+                                                    className="flex flex-col border-b border-neutral-200 gap-1 hover:bg-neutral-200"
+                                                    key={noti.commentId}
                                                 >
-                                                    <div className="flex justify-between gap-4">
-                                                        <span className="font-bold text-md max-w-xs text-primary-900">
-                                                            {noti.type ==
-                                                            "new-reply"
-                                                                ? `${noti.author} te ha respondido en ${noti.postTitle}`
-                                                                : `${noti.author} ha comentado en ${noti.postTitle}`}
-                                                        </span>
+                                                    <div className="flex justify-between items-top gap-4 px-4 pt-4">
                                                         <span className="text-neutral-500 font-light text-sm">
                                                             {dayjs(
                                                                 noti.publishDate
@@ -224,22 +223,35 @@ export default function Header() {
                                                                 .locale("es")
                                                                 .fromNow()}
                                                         </span>
+                                                        <button className="flex hover:text-primary-700" onClick={() => deleteNotification(noti.commentId)}>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                            </svg>
+                                                        </button>
                                                     </div>
-                                                    <p className="text-neutral-500 text-sm">
-                                                        {noti.comment}
-                                                    </p>
-                                                </Link>
-                                            )) : <span className="py-6">No hay notificaciones</span>}
+                                                    <Link  
+                                                        href={`/obra/${noti.post}#${noti.commentId}`}
+                                                        onClick={() => deleteNotification(noti.commentId)}
+                                                        className="flex flex-col gap-1 group px-4 pb-4">
+                                                            <span className="font-bold text-md max-w-xs text-primary-900 group-hover:text-primary-700">
+                                                                {noti.notification}
+                                                            </span>
+                                                            <p className="text-neutral-500 text-sm">
+                                                                {noti.comment}
+                                                            </p>
+                                                    </Link>
+                                                </div>
+                                            )) : <span className="py-6 px-4">No hay notificaciones</span>}
                                 </div>
                             </Menu.Item>
 
                             <Menu.Item>
                                 <div
-                                    className="flex justify-center bg-neutral-800 text-lg w-full py-2 
+                                    className="flex justify-center bg-neutral-800 text-lg w-full 
                                                 text-white font-bold hover:bg-neutral-700"
                                 >
                                     <button
-                                        className="w-full"
+                                        className="w-full py-2"
                                         onClick={() => logout()}
                                     >
                                         Salir

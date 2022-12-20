@@ -1,5 +1,5 @@
-import React, { useState, useContext, useEffect, createContext } from "react";
-import { getFirestore, collection, addDoc, onSnapshot, doc, query, arrayUnion, arrayRemove, deleteDoc, updateDoc } from "firebase/firestore";
+import React, { useState, useContext, createContext } from "react";
+import { getFirestore, collection, setDoc, addDoc, onSnapshot, doc, getDocs, query, arrayUnion, arrayRemove, deleteDoc, updateDoc, where } from "firebase/firestore";
 import { initializeFirebase } from "./Firebase";
 import { useAuth } from "./Auth";
 import { Comment as CommentType } from "../types/Comment";
@@ -10,10 +10,12 @@ const db = getFirestore(app);
 
 type CommentsContextType = {
     postComment: (slug: string, comment: string, post: string) => void;
-    replyComment: (comment: string, slug: string, post: string, parent: string | false, commentId: string) => void;
+    replyComment: (comment: string, slug: string, post: string, parent: string | false, commentId: string, replyingTo: string) => void;
     likeComment: (comment: CommentType) => void;
-    deleteComment: (id:string, slug: string) => void;
+    deleteComment: (id:string, slug: string, notifications: string[]) => void;
     getComments: (slug: string) => void;
+    getAllComments: (slug: string) => void;
+    deleteNotification: (id: string) => void;
     comments: CommentType[];
     unsubscribe: Unsubscribe | false;
 }
@@ -23,6 +25,7 @@ const CommentsContext = createContext({} as CommentsContextType);
 export function CommentsProvider({ children }: {children : React.ReactNode}) {
     const { user, isAdmin } = useAuth();
     const [comments, setComments] = useState<CommentType[]>([]);
+    const uid = "7NXk8PiCwggyA5vWYdJT5lVTxg22";
     let unsubscribe: Unsubscribe | false = false;
 
     const getComments = async (slug: string) => {
@@ -39,7 +42,17 @@ export function CommentsProvider({ children }: {children : React.ReactNode}) {
     }
 
     const getAllComments = async (slug: string) => {
-        
+        const q = query(collection(db, "posts", slug, "comments"));
+        let array: CommentType[] = []
+
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            const c = doc.data();
+            c.id = doc.id;
+            array.push(c as CommentType);
+        });
+
+        setComments(array)
     }
 
     const postComment = async (slug: string, comment: string, post: string) => {
@@ -55,15 +68,19 @@ export function CommentsProvider({ children }: {children : React.ReactNode}) {
                     likes: [],
                     parent: false,
                     isReply: false,
-                    notifications: []
+                    notifications: user.uid == uid ? [] : [uid]
                 });
+
+                if (user.uid !== uid) {
+                    notifyAdmin(`${user.displayName} ha comentado en ${post}`, docRef.id, comment, slug)
+                }
             } catch (e) {
                 console.error("Error adding document: ", e);
             }
         }
     };
 
-    const replyComment = async (comment: string, slug: string, post: string, parent: string | false, commentId: string) => {
+    const replyComment = async (comment: string, slug: string, post: string, parent: string | false, commentId: string, replyingTo: string) => {
         if(user) {
             try {
                 const docRef = await addDoc(collection(db, "posts", slug, "comments"), {
@@ -76,8 +93,22 @@ export function CommentsProvider({ children }: {children : React.ReactNode}) {
                     likes: [],
                     parent: parent ? parent : commentId,
                     isReply: true,
-                    notifications: []
+                    replyingTo: replyingTo,
+                    notifications: user.uid == uid ? [replyingTo] : [uid, replyingTo]
                 });
+
+                if (user.uid !== uid) {
+                    if (replyingTo !== uid && replyingTo !== user.uid) {
+                        notifyAdmin(`${user.displayName} ha respondido en ${post}`, docRef.id, comment, slug)
+                        notifyUser(`${user.displayName} ha respondido en ${post}`, replyingTo, docRef.id, comment, slug)
+                    } else {
+                        notifyAdmin(`${user.displayName} ha respondido en ${post}`, docRef.id, comment, slug)
+                    }
+                } else {
+                    if(replyingTo !== uid) {
+                        notifyUser(`${user.displayName} ha respondido en ${post}`, replyingTo, docRef.id, comment, slug)
+                    }
+                }
             } catch (e) {
                 console.error("Error adding document: ", e);
             }
@@ -98,20 +129,57 @@ export function CommentsProvider({ children }: {children : React.ReactNode}) {
         }
     };
 
-    const deleteComment = async (id: string, slug: string) => {
+    const deleteComment = async (id: string, slug: string, notifications: string[]) => {
         if (user && isAdmin) {
             await deleteDoc(doc(db, "posts", slug, "comments", id));
+            notifications.forEach(async (n) => {
+                await deleteDoc(doc(db, "users", n, "notifications", id));
+            })
 
             // Delete subcomments
             comments
                 .filter(comment => comment.parent == id)
-                .map(async comment => {
+                .forEach(async comment => {
                     await deleteDoc(doc(db, "posts", slug, "comments", comment.id));
+
+                    comment.notifications.forEach(async (n) => {
+                        await deleteDoc(doc(db, "users", n, "notifications", comment.id));
+                    })
                 });
         }
     };
 
-    return <CommentsContext.Provider value={{ comments, unsubscribe, getComments, postComment, replyComment, likeComment, deleteComment }}>{children}</CommentsContext.Provider>;
+    const notifyAdmin = async (notification: string, commentId: string, comment: string, postSlug: string) => {
+        await setDoc(doc(db, "users", uid, "notifications", commentId), {
+            notification: notification,
+            userId: user.uid,
+            author: user.displayName,
+            comment: comment,
+            commentId: commentId,
+            post: postSlug,
+            publishDate: Date.now(),
+        });
+    }
+
+    const notifyUser = async (notification: string, replyingTo: string, commentId: string, comment: string, postSlug: string) => {
+        await setDoc(doc(db, "users", replyingTo, "notifications", commentId), {
+            notification: notification,
+            userId: user.uid,
+            author: user.displayName,
+            comment: comment,
+            commentId: commentId,
+            post: postSlug,
+            publishDate: Date.now(),
+        });
+    }
+
+    const deleteNotification = async (id: string) => {
+        if (user) {
+            await deleteDoc(doc(db, "users", user.uid, "notifications", id));
+        }
+    }
+
+    return <CommentsContext.Provider value={{ comments, unsubscribe, getComments, getAllComments, postComment, replyComment, likeComment, deleteComment, deleteNotification }}>{children}</CommentsContext.Provider>;
 }
 
 export function useComments() {

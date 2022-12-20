@@ -25,8 +25,6 @@ const Comment = ({ comment }: CommentProps) => {
     require('dayjs/locale/es')
     dayjs.extend(relativeTime);
 
-    const uid = "7NXk8PiCwggyA5vWYdJT5lVTxg22";
-
     useEffect(() => {
         if (user) {
             setIsOpen(false);
@@ -94,7 +92,7 @@ const Comment = ({ comment }: CommentProps) => {
                             <span className='p-2'>¿Elminar comentario permanentemente?</span>
                             <div className='flex self-end'>
                                 <button className='p-2 rounded hover:bg-neutral-700' onClick={() => toggleDeleteCommentAlert(false)}>Cancelar</button>
-                                <button className='p-2 rounded hover:bg-neutral-700' onClick={() => deleteComment(comment.id, comment.post)}>Confirmar</button>
+                                <button className='p-2 rounded hover:bg-neutral-700' onClick={() => deleteComment(comment.id, comment.post, comment.notifications)}>Confirmar</button>
                             </div>
                     </Dialog.Panel>
                 </div>
