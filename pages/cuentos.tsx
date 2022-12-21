@@ -37,10 +37,10 @@ const Cuentos: NextPage<CuentosProps> = ({ posts }) => {
                   </h2>
                 </Link>
                 <Link href={`/obra/${post.slug}`}>
-                  <p className="font-roboto text-md text-primary-700 leading-8 md:hidden text-justify">
+                  <p className="font-roboto text-md font-light text-primary-700 leading-8 md:hidden text-justify">
                     {post.content.split(" ").slice(0, 15).join(" ")}...
                   </p>
-                  <p className="font-roboto text-md text-primary-700 leading-8 hidden md:block text-justify">
+                  <p className="font-roboto text-md font-light text-primary-700 leading-8 hidden md:block text-justify">
                     {post.content.split(" ").slice(0, 35).join(" ")}...
                   </p>
                 </Link>
