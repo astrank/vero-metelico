@@ -3,3 +3,4 @@
 5. bloquear usuario
 9. juego
 11. instagram menos en mobile
+2. agregar de invitados
