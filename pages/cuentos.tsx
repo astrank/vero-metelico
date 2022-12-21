@@ -23,8 +23,9 @@ const Cuentos: NextPage<CuentosProps> = ({ posts }) => {
 
       <Header />
 
-      <div className="flex flex-col gap-8 text-primary-900 mx-4 my-12 md:mx-10 lg:mx-14 xl:mx-44 mb-auto">
-        <div className="flex flex-col gap-10 my-6">
+      <div className="flex flex-col gap-6 text-primary-900 mx-4 my-8 md:mx-10 lg:mx-14 xl:mx-44 mb-auto">
+        <h1 className="font-asap text-3xl">Cuentos</h1>
+        <div className="flex flex-col gap-4 my-6">
           {posts &&
             posts.length > 0 &&
             posts.map((post, i) => (
@@ -35,7 +36,10 @@ const Cuentos: NextPage<CuentosProps> = ({ posts }) => {
                   </h2>
                 </Link>
                 <Link href={`/obra/${post.slug}`}>
-                  <p className="font-roboto text-md text-primary-700 leading-8">
+                  <p className="font-roboto text-md text-primary-700 leading-8 md:hidden">
+                    {post.content.split(" ").slice(0, 15).join(" ")}...
+                  </p>
+                  <p className="font-roboto text-md text-primary-700 leading-8 hidden md:block">
                     {post.content.split(" ").slice(0, 35).join(" ")}...
                   </p>
                 </Link>

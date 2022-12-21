@@ -15,13 +15,12 @@ type CommentInputProps = {
 }
 
 const CommentInput = ({ slug, title, comment, closeReplyBox }: CommentInputProps) => {
-    const { user } = useAuth();
-    const uid = "7NXk8PiCwggyA5vWYdJT5lVTxg22";
-
-    const { postComment, replyComment } = useComments();
     const [loginDialog, toggleLoginDialog] = useState(false);
     const [newComment, writeNewComment] = useState<string>("");
     const [componentVisibility, toggleComponentVisibility] = useState<boolean>(true);
+
+    const { postComment, replyComment } = useComments();
+    const { user } = useAuth();
 
     useEffect(() => {
         if (user) {
@@ -29,9 +28,9 @@ const CommentInput = ({ slug, title, comment, closeReplyBox }: CommentInputProps
         }
     }, [user])
 
-    const handlePostComment = async () => {
+    const handlePostComment = () => {
         toggleComponentVisibility(false);
-        
+
         comment
             ? replyComment(newComment, comment.post, comment.postTitle, comment.parent, comment.id, comment.userId)
             : postComment(slug, newComment, title)
@@ -48,7 +47,7 @@ const CommentInput = ({ slug, title, comment, closeReplyBox }: CommentInputProps
     return (
         <>
             {componentVisibility ?
-                <div className={`flex flex-col gap-6 my-6 ${!componentVisibility ? "hidden" : ""}`}>
+                <div className={`flex flex-col gap-6 my-6`}>
                     <textarea 
                         className='border border-primary-700 py-2 px-4 focus:outline-none' 
                         onChange={(e) => writeNewComment(e.target.value)} 
@@ -57,19 +56,19 @@ const CommentInput = ({ slug, title, comment, closeReplyBox }: CommentInputProps
                         placeholder={user ? `Comenta como ${user.displayName}` : `Ingresa para comentar`} />
                     <div className="flex gap-4 items-center justify-end">
                         {closeReplyBox &&
-                            <Button text="Cancel" onClick={closeReplyBox} />}
+                            <Button text="Cancel" onClick={() => closeReplyBox} />}
                         <Button
                             text={comment ? "Responder" : "Comentar"}
-                            onClick={handlePostComment}
+                            onClick={() => { toggleComponentVisibility(false), handlePostComment() }}
                             disabled={!user || newComment.length < 1} />
                     </div>
                 </div> :
-                <div className="mx-auto py-8">
-                    <svg className="animate-spin -ml-1 mr-3 h-8 w-8 text-primary-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                </div>}
+                    <div className="mx-auto py-8">
+                        <svg className="animate-spin -ml-1 mr-3 h-8 w-8 text-primary-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </div>}
 
             <Dialog open={loginDialog} onClose={() => toggleLoginDialog(false)} className="relative z-50">
                 <div className="fixed inset-0 bg-black/30" aria-hidden="true" />

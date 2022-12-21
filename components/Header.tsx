@@ -241,7 +241,7 @@ export default function Header() {
                                                             </p>
                                                     </Link>
                                                 </div>
-                                            )) : <span className="py-6 px-4">No hay notificaciones</span>}
+                                            )) : <span className="py-6 px-4 mx-auto">No hay notificaciones</span>}
                                 </div>
                             </Menu.Item>
 

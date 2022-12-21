@@ -1,4 +1,5 @@
 1. cargar comentarios antes que la pagina
 5. bloquear usuario
-7. achicar texto en obra en mobile
 8. cuentas email
+9. juego
+10. esconder input comentario al postear

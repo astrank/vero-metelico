@@ -28,7 +28,7 @@ const Obra: NextPage<ObraProps> = ({ posts, categories }) => {
 
             <Header />
 
-            <div className="flex flex-col gap-6 text-primary-900 mx-4 my-8 md:mx-10 lg:mx-14 xl:mx-44">
+            <div className="flex flex-col gap-6 text-primary-900 mx-4 my-8 md:mx-10 lg:mx-14 xl:mx-44 mb-auto">
                 <h1 className="font-asap text-3xl">Últimas publicaciones</h1>
                 <div className="flex flex-col gap-4 my-6">
                     {visiblePosts && visiblePosts.length > 0 && 
@@ -38,7 +38,12 @@ const Obra: NextPage<ObraProps> = ({ posts, categories }) => {
                                     <h2 className="font-asap text-2xl group-hover:text-primary-700">{post.title}</h2>
                                 </Link>
                                 <Link href={`/obra/${post.slug}`}>
-                                    <p className="font-roboto font-light text-md text-primary-700 leading-8">
+                                    <p className="font-roboto font-light text-md text-primary-700 leading-8 md:hidden">
+                                        {post.content
+                                            .split(" ")
+                                            .slice(0, 15)
+                                            .join(" ")}...</p>
+                                    <p className="font-roboto font-light text-md text-primary-700 leading-8 hidden md:block">
                                         {post.content
                                             .split(" ")
                                             .slice(0, 35)
