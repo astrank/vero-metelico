@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import Link from "next/link";
 import { Post } from "../types/Post";
 import { NextPage } from "next";
+import Instagram from "../components/Instagram";
 
 type ReflexionesProps = {
     posts: Post[],
@@ -23,7 +24,7 @@ const Reflexiones: NextPage<ReflexionesProps> = ({ posts }) => {
 
             <Header />
 
-            <div className="flex flex-col gap-6 text-primary-900 mx-4 my-12 md:mx-10 lg:mx-14 xl:mx-44 mb-auto">
+            <div className="flex flex-col gap-6 text-primary-900 mx-4 my-8 md:mx-10 lg:mx-14 xl:mx-44 mb-auto">
                 <h1 className="font-asap text-3xl">Reflexiones</h1>
                 <div className="flex flex-col gap-10 my-6">
                     {posts && posts.length > 0 && 
@@ -54,6 +55,10 @@ const Reflexiones: NextPage<ReflexionesProps> = ({ posts }) => {
                         ))}
                 </div>
             </div>
+
+            <section className="mt-14">
+                <Instagram />
+            </section>
 
             <Footer />
         </div>

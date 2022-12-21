@@ -28,7 +28,7 @@ export default function Instagram() {
         <>
             {instagramData.length > 0 &&
                 <div className="mx-4 md:mx-10 lg:mx-14 xl:mx-44">
-                    <h2 className="font-asap text-2xl text-primary-900 mb-8">Ultimas publicaciones de Instagram</h2>
+                    <h2 className="font-asap text-2xl text-primary-900 mb-8">Últimas publicaciones de Instagram</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 justify-center items-center">
                         {instagramData.map(data => (
                             <a href={data.permalink} className="relative bg-neutral-200" key={data.id} target="_blank" rel="noreferrer">

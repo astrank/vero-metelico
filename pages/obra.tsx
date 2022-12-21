@@ -6,6 +6,7 @@ import { Post } from "../types/Post";
 import { Category } from "../types/Category";
 import { NextPage } from "next";
 import { useState } from "react";
+import Instagram from "../components/Instagram";
 
 type ObraProps = {
     posts: Post[],
@@ -59,6 +60,10 @@ const Obra: NextPage<ObraProps> = ({ posts, categories }) => {
                         ))}
                 </div>
             </div>
+
+            <section className="mt-14">
+                <Instagram />
+            </section>
 
             <Footer />
         </div>
