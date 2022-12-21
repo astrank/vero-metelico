@@ -8,7 +8,7 @@ export default function SobreMi() {
     return (
         <div className="min-h-screen text-primary-700">
             <Head>
-                <title>Contacto | Verónica Metélico</title>
+                <title>Sobre mí | Verónica Metélico</title>
                 <meta
                     name="description"
                     content="Cuentos y Reflexiones | Verónica Metélico"

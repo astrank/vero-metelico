@@ -12,7 +12,6 @@ export default function Obra() {
     useEffect(() => {
         if(!router.isReady) return;
         const query = router.query;
-        console.log(query.q)
     }, [router.isReady, router.query]);
 
     const emailSchema = Yup.object().shape({

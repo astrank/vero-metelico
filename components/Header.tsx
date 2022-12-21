@@ -37,7 +37,7 @@ export default function Header() {
 
         if (user) {
             setIsOpen(false);
-            console.log(user.uid)
+            
             const q = query(
                 collection(db, "users", user.uid, "notifications")
             );
