@@ -2,3 +2,4 @@
 10. esconder input comentario al postear
 5. bloquear usuario
 9. juego
+11. instagram menos en mobile

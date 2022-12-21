@@ -29,7 +29,7 @@ export default function SobreMi() {
                     />
                 </div>
                 <div className="flex flex-col gap-4 lg:w-7/12 font-light text-base leading-7 font-roboto lg:text-lg">
-                    <h1 className="font-asap text-2xl text-primary-900 mb-2 lg:mb-4 lg:text-3xl text-justify">Verónica Metélico</h1>
+                    <h1 className="font-asap text-2xl text-primary-900 mb-2 lg:mb-4 lg:text-3xl text-justify">Te doy la bienvenida a mi sitio</h1>
                     <p className="text-justify">
                         Soy Verónica Metélico. Nací el 24 de octubre de 1973 así que
                         saquen ustedes las cuentas. Nací en Córdoba Capital,

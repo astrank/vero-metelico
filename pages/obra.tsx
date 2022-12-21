@@ -39,12 +39,12 @@ const Obra: NextPage<ObraProps> = ({ posts, categories }) => {
                                     <h2 className="font-asap text-2xl group-hover:text-primary-700">{post.title}</h2>
                                 </Link>
                                 <Link href={`/obra/${post.slug}`}>
-                                    <p className="font-roboto font-light text-md text-primary-700 leading-8 md:hidden">
+                                    <p className="font-roboto font-light text-md text-primary-700 leading-8 md:hidden text-justify">
                                         {post.content
                                             .split(" ")
                                             .slice(0, 15)
                                             .join(" ")}...</p>
-                                    <p className="font-roboto font-light text-md text-primary-700 leading-8 hidden md:block">
+                                    <p className="font-roboto font-light text-md text-primary-700 leading-8 hidden md:block text-justify">
                                         {post.content
                                             .split(" ")
                                             .slice(0, 35)
