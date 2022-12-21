@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 
 type InstagramData = {
     id: string,
@@ -32,7 +31,7 @@ export default function Instagram() {
                     <h2 className="font-asap text-2xl text-primary-900 mb-8">Ultimas publicaciones de Instagram</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 justify-center items-center">
                         {instagramData.map(data => (
-                            <a href={data.permalink} className="relative bg-neutral-200" key={data.id} target="_blank">
+                            <a href={data.permalink} className="relative bg-neutral-200" key={data.id} target="_blank" rel="noreferrer">
                                 <Image
                                     src={data.media_url}
                                     width={700}
