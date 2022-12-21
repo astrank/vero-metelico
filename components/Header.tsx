@@ -163,7 +163,7 @@ export default function Header() {
                         </li>
                         </ul>
                 </div>
-                {user ? (
+                {user &&
                     <Menu>
                         <Menu.Button
                             className="flex items-center justify-center"
@@ -260,7 +260,7 @@ export default function Header() {
                             </Menu.Item>
                         </Menu.Items>
                     </Menu>
-                ) : (
+                /* ) : (
                     <button
                         className="hover:text-primary-700 flex items-center"
                         onClick={() => setIsOpen(true)}
@@ -280,7 +280,7 @@ export default function Header() {
                             />
                         </svg>
                     </button>
-                )}
+                )} */}
                 
             </nav>
 
