@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "../utils/Auth";
+import Link from "next/link";
 import Button from "../components/Button";
 
 const Login = () => {
@@ -55,8 +56,7 @@ const Login = () => {
                         type="text"
                         {...formik.getFieldProps("email")}
                         id="email"
-                        className="bg-neutral-200 border outline-none h-8 border-primary-700"
-                        disabled
+                        className="border outline-none h-8 border-primary-700 px-2"
                     />
                     {formik.errors.email && formik.touched.email && (
                         <span
@@ -75,8 +75,7 @@ const Login = () => {
                         type="password"
                         id="password"
                         {...formik.getFieldProps("password")}
-                        className="bg-neutral-200 border outline-none h-8 border-primary-700"
-                        disabled
+                        className="border outline-none h-8 border-primary-700 px-2"
                     />
                     {formik.errors.password && formik.touched.password && (
                         <span
@@ -87,7 +86,10 @@ const Login = () => {
                         </span>
                     )}
                 </div>
-                <Button text="Entrar" type="submit" />
+                <div className="flex justify-between items-center mt-4">
+                    <Link href="/unirse" className="text-secondary-600">Crear una cuenta</Link>
+                    <button className="bg-secondary-400 text-sm px-5 md:px-6 py-3 hover:bg-secondary-200" type="submit">Entrar</button>
+                </div>
             </form>
         </div>
     );

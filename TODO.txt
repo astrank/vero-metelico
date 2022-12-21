@@ -1,5 +1,4 @@
 1. cargar comentarios antes que la pagina
-5. bloquear usuario
-8. cuentas email
-9. juego
 10. esconder input comentario al postear
+5. bloquear usuario
+9. juego

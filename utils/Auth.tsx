@@ -25,13 +25,23 @@ export function AuthProvider<AuthContextValue>({ children }: {children : React.R
 
     const signup = async (email: string, password: string, displayName: string) => {
         const newUser = await createUserWithEmailAndPassword(auth, email, password)
-            .then(res => { return res.user })
+            .then(res => { 
+                return res.user;
+            })
 
         setUser(newUser);
         set(ref(db, `users/${newUser.uid}`), {
             role: "user"
         })
     };
+
+    const updateUser = async (displayName: string) => {
+        if (auth.currentUser) {
+            updateProfile(auth.currentUser, {
+                displayName: displayName
+            }).catch(error => console.log(error))
+        };
+    }
 
     const login = (email: string, password: string) => {
         return signInWithEmailAndPassword(auth, email, password).then((res) => {
@@ -59,15 +69,6 @@ export function AuthProvider<AuthContextValue>({ children }: {children : React.R
         });
     };
 
-    const updateUser = (displayName: string) => {
-        if(auth.currentUser) {
-            updateProfile(auth.currentUser, {
-                displayName: displayName
-            });
-            auth.currentUser.reload();
-        }
-    }
-
     const checkAdmin = (uid: string) => {
         onValue(ref(db, `users/${uid}`), (snapshot) => {
             if(snapshot.val()) {
@@ -91,7 +92,7 @@ export function AuthProvider<AuthContextValue>({ children }: {children : React.R
         return () => unsubscribe();
     }, []);
 
-    return <AuthContext.Provider value={{user, isAdmin, signup, login, google, logout}}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{user, isAdmin, updateUser, signup, login, google, logout}}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
