@@ -25,7 +25,8 @@ export default function Obra() {
                 </div>
                 <div className="group flex flex-col gap-3">
                     <Link href="#" className="self-start">
-                        <h2 className="font-asap text-2xl group-hover:text-primary-700">Titulo titulo</h2>
+                        <h2 className="font-asap text-2xl group-hover:text-primary-700 mb-2">Titulo titulo</h2>
+                        <span>Autor: Martín Sarasa</span>
                     </Link>
                     <Link href="#">
                         <p className="font-roboto font-light text-md text-primary-700 leading-8 text-justify">
@@ -40,7 +41,8 @@ export default function Obra() {
                 </div>
                 <div className="group flex flex-col gap-3">
                     <Link href="#" className="self-start">
-                        <h2 className="font-asap text-2xl group-hover:text-primary-700">Titulo titulo</h2>
+                        <h2 className="font-asap text-2xl group-hover:text-primary-700 mb-2">Titulo titulo</h2>
+                        <span>Autor: Martín Sarasa</span>
                     </Link>
                     <Link href="#">
                         <p className="font-roboto font-light text-md text-primary-700 leading-8">

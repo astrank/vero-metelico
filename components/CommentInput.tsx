@@ -49,10 +49,11 @@ const CommentInput = ({ slug, title, comment, closeReplyBox }: CommentInputProps
             {componentVisibility ?
                 <div className={`flex flex-col gap-6 my-6`}>
                     <textarea 
-                        className='border border-primary-700 py-2 px-4 focus:outline-none' 
+                        className='border border-primary-700 p-2 px-4 focus:outline-none' 
                         onChange={(e) => writeNewComment(e.target.value)} 
                         onClick={() => !user ? toggleLoginDialog(true) : ""}
                         value={newComment}
+                        rows={5}
                         placeholder={user ? `Comenta como ${user.displayName}` : `Ingresa para comentar`} />
                     <div className="flex gap-4 items-center justify-end">
                         {closeReplyBox &&

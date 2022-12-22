@@ -1,7 +1,4 @@
-1. cargar comentarios antes que la pagina
-10. esconder input comentario al postear
-5. bloquear usuario
-9. juego
-11. instagram menos en mobile
-2. agregar de invitados
-3. text comenmtario en notificaciones
+1. esconder input comentario al postear
+2. cargar comentarios antes que la pagina
+3. juego
+4. bloquear usuario

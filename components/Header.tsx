@@ -189,7 +189,7 @@ export default function Header() {
                         <Menu.Items
                             className="absolute flex flex-col items-center justify-center rounded-md 
                                             top-14 right-0 border border-neutral-200 overflow-hidden shadow-lg z-20 
-                                            bg-neutral-100 mx-4 md:mx-10 lg:mx-14 xl:mx-24 sm:min-w-96 max-w-full"
+                                            bg-neutral-100 mx-4 md:mx-10 lg:mx-14 xl:mx-24 sm:w-96"
                         >
                             <Menu.Item>
                                 <span className="py-1 bg-neutral-300 font-bold px-4 w-full">{user.displayName}</span>
@@ -234,7 +234,12 @@ export default function Header() {
                                                                 {noti.notification}
                                                             </span>
                                                             <p className="text-neutral-500 text-sm">
-                                                                {noti.comment}
+                                                                {noti.comment.split(" ").length > 15
+                                                                    ? `${noti.comment
+                                                                        .split(" ")
+                                                                        .slice(0, 14)
+                                                                        .join(" ")}...`
+                                                                    : noti.comment}
                                                             </p>
                                                     </Link>
                                                 </div>
