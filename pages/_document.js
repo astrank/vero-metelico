@@ -1,4 +1,5 @@
-import Document, { Html, Head, Main, NextScript, Script } from "next/document";
+import Document, { Html, Head, Main, NextScript } from "next/document";
+import Script from "next/script";
 
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
@@ -11,14 +12,17 @@ class MyDocument extends Document {
       <Html lang="es">
         <Head>
           <Script
-            async
-            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
-          ></Script>
-          <Script>
-            window.dataLayer = window.dataLayer || []; function gtag()
-            {dataLayer.push(arguments)}
-            gtag('js', new Date()); gtag('config', '$
-            {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}');
+            src="https://www.googletagmanager.com/gtag/js?id=G-xxxxxxxxxx"
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-xxxxxxxxxx');
+        `}
           </Script>
         </Head>
         <body>
