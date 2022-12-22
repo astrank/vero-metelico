@@ -1,11 +1,12 @@
 import Head from "next/head";
+import Script from "next/script";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Link from "next/link";
 import { Post } from "../types/Post";
 import { Category } from "../types/Category";
 import { NextPage } from "next";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Instagram from "../components/Instagram";
 
 type ObraProps = {
@@ -13,7 +14,12 @@ type ObraProps = {
     categories: Category[],
 }
 
-const Obra: NextPage<ObraProps> = ({ posts, categories }) => {
+declare global {
+    interface Window { google: any; }
+    interface Window { googleTranslateElementInit: any; }
+}
+
+const Obra: NextPage<ObraProps> = ({ posts }) => {
     const [visiblePosts, editPosts] = useState<Post[]>(posts);
 
     return (
@@ -24,7 +30,6 @@ const Obra: NextPage<ObraProps> = ({ posts, categories }) => {
                     name="description"
                     content="Cuentos y Reflexiones | Verónica Metélico"
                 />
-                <link rel="icon" href="/favicon.ico" />
             </Head>
 
             <Header />
@@ -75,12 +80,8 @@ export const getStaticProps = async () => {
         (res) => res.default
     );
 
-    const categories = await import("../public/data/categories.json").then(
-        (res) => res.default
-    );
-
     return {
-        props: { posts, categories },
+        props: { posts },
     };
 };
 

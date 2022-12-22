@@ -15,7 +15,6 @@ const Home: NextPage = () => {
                     name="description"
                     content="Cuentos y Reflexiones | Verónica Metélico"
                 />
-                <link rel="icon" href="/favicon.ico" />
             </Head>
 
             <div className="flex flex-col-reverse md:grid md:grid-cols-2 h-screen text-primary-900">

@@ -70,7 +70,6 @@ export default function SignUp() {
                 name="description"
                 content="Cuentos y Reflexiones | Verónica Metélico"
                 />
-                <link rel="icon" href="/favicon.ico" />
             </Head>
 
             <Header />

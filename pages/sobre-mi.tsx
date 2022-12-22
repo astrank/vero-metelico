@@ -1,10 +1,43 @@
+import { useEffect, useRef, useState } from "react";
 import Head from "next/head";
+import Image from "next/image";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import Image from "next/image";
 import Instagram from "../components/Instagram";
 
 export default function SobreMi() {
+    const [showingTranslation, toggleShowingTranslation] = useState(false);
+    let translate = false;
+    const firstRender = useRef(true);
+
+    const googleTranslateElementInit = () => {
+        if(!translate) {
+            new window.google.translate.TranslateElement({
+                pageLanguage: "es",
+                autoDisplay: false
+            }, "google_translate_element");
+
+            translate = true;
+        }
+    };
+
+    useEffect(() => {
+        if (firstRender.current) {
+            firstRender.current = false;
+            return;
+        }
+        
+        if(!translate) {
+            var addScript = document.createElement("script");
+            addScript.setAttribute(
+            "src",
+            "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+            );
+            document.body.appendChild(addScript);
+            window.googleTranslateElementInit = googleTranslateElementInit;
+        }
+    }, []);
+
     return (
         <div className="min-h-screen text-primary-700">
             <Head>
@@ -13,10 +46,19 @@ export default function SobreMi() {
                     name="description"
                     content="Cuentos y Reflexiones | Verónica Metélico"
                 />
-                <link rel="icon" href="/favicon.ico" />
             </Head>
 
             <Header />
+
+            <div className="flex flex-col justify-start items-end gap-2 mx-4 h-full my-10 lg:my-20 md:mx-10 lg:mx-14 xl:mx-44">
+                <button onClick={() => toggleShowingTranslation(!showingTranslation)} className="flex items-center gap-1 text-sm">
+                    <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 016-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 01-3.827-5.802" />
+                    </svg>
+                    <span>TRADUCTOR</span>
+                </button>
+                <div id="google_translate_element" className={`${!showingTranslation && "hidden"}`}></div>
+            </div>
 
             <section className="flex flex-col-reverse gap-10 mx-4 h-full my-10 lg:gap-20 lg:my-20 lg:flex-row md:mx-10 lg:mx-14 xl:mx-44">
                 <div className="relative w-full h-96 lg:h-auto lg:w-5/12">

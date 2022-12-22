@@ -1,16 +1,12 @@
 import { useEffect } from "react";
-import { GetStaticProps, GetStaticPaths, NextPage, GetServerSideProps } from "next";
+import { GetStaticProps, GetStaticPaths, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import Markdown from "react-markdown";
 import posts from "../../public/data/posts.json";
 import { useComments } from "../../utils/Comments";
 
-import { getFirestore, collection, addDoc, onSnapshot, doc, getDocs, query, arrayUnion, arrayRemove, deleteDoc, updateDoc } from "firebase/firestore";
-import { initializeFirebase } from "../../utils/Firebase";
-
 import { Post } from "../../types/Post";
-import { Comment as CommentType } from "../../types/Comment";
 
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
