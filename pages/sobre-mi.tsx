@@ -57,7 +57,7 @@ export default function SobreMi() {
                     </svg>
                     <span>TRADUCTOR</span>
                 </button>
-                <div id="google_translate_element" className={`${!showingTranslation && "hidden"}`}></div>
+                <div id="google_translate_element" className={`${!showingTranslation ? "hidden" : ""}`}></div>
             </div>
 
             <section className="flex flex-col-reverse gap-10 mx-4 h-full my-10 lg:gap-20 lg:my-20 lg:flex-row md:mx-10 lg:mx-14 xl:mx-44">
