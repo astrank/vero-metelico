@@ -130,7 +130,7 @@ export function CommentsProvider({ children }: {children : React.ReactNode}) {
     };
 
     const deleteComment = async (id: string, slug: string, notifications: string[]) => {
-        if (user && isAdmin) {
+        if (user && (user.uid == id || isAdmin)) {
             await deleteDoc(doc(db, "posts", slug, "comments", id));
             notifications.forEach(async (n) => {
                 await deleteDoc(doc(db, "users", n, "notifications", id));
@@ -148,6 +148,35 @@ export function CommentsProvider({ children }: {children : React.ReactNode}) {
                 });
         }
     };
+
+    const postStory = async (comment: string) => {
+        if(user) {
+            try {
+                const docRef = await addDoc(collection(db, "escritura-grupal"), {
+                    userId: user.uid,
+                    author: user.displayName,
+                    comment: comment,
+                    publishDate: Date.now(),
+                    approved: false,
+                    notifications: user.uid == uid ? [] : [uid]
+                });
+
+                if (user.uid !== uid) {
+                    notifyAdmin(`${user.displayName} ha continuado la escritura grupal.`, docRef.id, comment, "escritura-grupal")
+                }
+            } catch (e) {
+                console.error("Error adding document: ", e);
+            }
+        }
+    }
+
+    const approveStory = async (id: string) => {
+        if (user && isAdmin) {
+            await updateDoc(doc(db, "escritura-grupal", id), {
+                approved: true
+            });
+        }
+    }
 
     const notifyAdmin = async (notification: string, commentId: string, comment: string, postSlug: string) => {
         await setDoc(doc(db, "users", uid, "notifications", commentId), {

@@ -1,7 +1,13 @@
 const fs = require("fs");
 
 const dataPath = "public/data/";
-const directories = ["posts", "categories", "authors", "invitados"];
+const directories = [
+  "posts",
+  "categories",
+  "authors",
+  "invitados",
+  "escritura-grupal",
+];
 
 const multipleJsonFilesToOne = (path) => {
   const fileNames = fs.readdirSync(path);

@@ -146,7 +146,7 @@ export default function Header() {
                             </Link>
                         </li>
                         <li>
-                            <a href="#" className="hover:text-primary-700">
+                            <a href="/escritura-grupal" className="hover:text-primary-700">
                                 Escritura grupal
                             </a>
                         </li>
@@ -233,7 +233,7 @@ export default function Header() {
                                                             <span className="font-bold text-md max-w-xs text-primary-900 group-hover:text-primary-700">
                                                                 {noti.notification}
                                                             </span>
-                                                            <p className="text-neutral-500 text-sm">
+                                                            <p className="text-neutral-500 font-light text-sm">
                                                                 {noti.comment.split(" ").length > 15
                                                                     ? `${noti.comment
                                                                         .split(" ")

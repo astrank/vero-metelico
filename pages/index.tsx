@@ -73,7 +73,9 @@ const Home: NextPage = () => {
                                 <li>
                                     <Link href="/invitados" className="hover:text-primary-700">Invitados</Link>
                                 </li>
-                                <li>Escritura grupal</li>
+                                <li>
+                                    <Link href="/escritura-grupal" className="hover:text-primary-700">Escritura grupal</Link>
+                                </li>
                                 <li>
                                     <Link href="/contacto" className="hover:text-primary-700">Contacto</Link>
                                 </li>
