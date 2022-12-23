@@ -146,9 +146,9 @@ export default function Header() {
                             </Link>
                         </li>
                         <li>
-                            <a href="/escritura-grupal" className="hover:text-primary-700">
+                            <Link href="/escritura-grupal" className="hover:text-primary-700">
                                 Escritura grupal
-                            </a>
+                            </Link>
                         </li>
                         <li>
                             <Link

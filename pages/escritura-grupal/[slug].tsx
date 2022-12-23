@@ -64,7 +64,7 @@ const EscrituraGrupal: NextPage<EscrituraGrupalProps> = ({ escritura }) => {
           .filter(story => story.approved)
           .sort((a,b) => (a.publish_date > b.publish_date) ? 1 : ((b.publish_date > a.publish_date) ? -1 : 0))
           .map(story => (
-            <div>
+            <div key={story.id}>
               <p>{story.content}</p>
               <div>
                   <span className='font-bold'>{story.authorName}</span>
