@@ -32,6 +32,11 @@ const EscrituraGrupal: NextPage<EscrituraGrupalProps> = ({ escritura }) => {
     return () => {unsubscribe && unsubscribe()}
   }, [])
 
+  const handlePost = () => {
+    postStory(escritura.slug, fragment)
+    setFragment("");
+  }
+
   return (
     <div className="min-h-screen text-primary-900 ">
       <Head>
@@ -59,16 +64,16 @@ const EscrituraGrupal: NextPage<EscrituraGrupalProps> = ({ escritura }) => {
           </Markdown>
       </section>
 
-      <section className="flex flex-col gap-4 mx-4 md:mx-10 lg:mx-14 lg:my-20 lg:mx-44">
+      <section className="flex flex-col gap-14 mx-4 md:mx-10 lg:mx-14 lg:my-20 lg:mx-44">
         {stories
           .filter(story => story.approved)
-          .sort((a,b) => (a.publish_date > b.publish_date) ? 1 : ((b.publish_date > a.publish_date) ? -1 : 0))
+          .sort((a,b) => (a.publishDate > b.publishDate) ? 1 : ((b.publishDate > a.publishDate) ? -1 : 0))
           .map(story => (
-            <div key={story.id}>
-              <p>{story.content}</p>
-              <div>
+            <div key={story.id} className="flex flex-col gap-2">
+              <p className="font-roboto font-light text-md text-primary-700 leading-7 md:leading-8 md:text-lg">{story.content}</p>
+              <div className="self-end">
                   <span className='font-bold'>{story.authorName}</span>
-                  <span className='text-primary-700'> · {dayjs(story.publish_date).locale("es").fromNow()}</span>
+                  <span className='text-primary-700'> · {dayjs(story.publishDate).locale("es").fromNow()}</span>
               </div>
             </div>
         ))}
@@ -77,25 +82,25 @@ const EscrituraGrupal: NextPage<EscrituraGrupalProps> = ({ escritura }) => {
       <section className="flex flex-col mx-4 md:mx-10 lg:mx-14 lg:my-20 lg:mx-44">
         <textarea value={fragment} onChange={(e) => setFragment(e.target.value)} name="" id="" rows={5} className="p-2 text-primary-700 outline-none border border-primary-700" placeholder="Continuación de la historia" />
         <button 
-            onClick={() => postStory(escritura.slug, fragment)}
+            onClick={() => handlePost()}
             className="bg-secondary-400 text-sm px-5 md:px-6 py-3 mt-4 self-end hover:bg-secondary-200">
                 Enviar
         </button>
       </section>
 
       {user && isAdmin &&
-        <section className="flex flex-col gap-4 mx-4 md:mx-10 lg:mx-14 lg:my-20 lg:mx-44">
+        <section className="flex flex-col gap-10 mx-4 md:mx-10 lg:mx-14 lg:my-20 lg:mx-44">
           {stories
             .filter(story => !story.approved)
-            .sort((a,b) => (a.publish_date > b.publish_date) ? 1 : ((b.publish_date > a.publish_date) ? -1 : 0))
+            .sort((a,b) => (a.publishDate > b.publishDate) ? 1 : ((b.publishDate > a.publishDate) ? -1 : 0))
             .map((story, i) => (
-              <div key={i}>
-                <p>{story.content}</p>
+              <div key={i} className="flex flex-col gap-4 justify-start">
                 <div>
                   <span className='font-bold'>{story.authorName}</span>
-                  <span className='text-primary-700'> · {dayjs(story.publish_date).locale("es").fromNow()}</span>
+                  <span className='text-primary-700'> · {dayjs(story.publishDate).locale("es").fromNow()}</span>
                 </div>
-                <button onClick={() => approveStory(story.id, escritura.slug)}>Aprobar</button>
+                <p>{story.content}</p>
+                <button className="self-start" onClick={() => approveStory(story.id, escritura.slug)}>Aprobar</button>
               </div>
           ))}
         </section>}

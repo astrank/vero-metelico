@@ -27,7 +27,7 @@ const Obra: NextPage<ObraProps> = ({ post }) => {
     }, [])
 
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen max-w-screen overflow-hidden">
             <Head>
                 <title>{`${post.title} | Verónica Metélico`}</title>
                 <meta
