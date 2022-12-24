@@ -135,6 +135,14 @@ export default function Header() {
                                         Reflexiones
                                     </Link>
                                 </li>
+                                <li>
+                                    <Link
+                                        className="hover:text-primary-700"
+                                        href="/poesia"
+                                    >
+                                        Poesía
+                                    </Link>
+                                </li>
                             </ul>
                         </li>
                         <li>
