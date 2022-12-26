@@ -86,7 +86,7 @@ a {
   }
 
   .navbar.open {
-    height: 15em;
+    height: 17em;
     padding-block: 10px;
     z-index: 10;
   }
