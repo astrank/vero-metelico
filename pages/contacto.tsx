@@ -3,16 +3,13 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useRouter } from 'next/router'
-import { useEffect } from "react";
+import { useState } from "react";
+import * as Toast from "@radix-ui/react-toast";
+import { ToastType } from "../types/Toast";
 
-export default function Obra() {
-    const router = useRouter();
-
-    useEffect(() => {
-        if(!router.isReady) return;
-        const query = router.query;
-    }, [router.isReady, router.query]);
+export default function Contacto() {
+    const [toast, setToast] = useState<ToastType | false>(false);
+    const [isToastOpen, toggleToast] = useState<boolean>(false);
 
     const emailSchema = Yup.object().shape({
         nombre: Yup.string()
@@ -40,10 +37,10 @@ export default function Obra() {
             mensaje: ''
         },
         validationSchema: emailSchema,
-        onSubmit: values => { 
-            fetch("https://formsubmit.co/46c8e5f4ab3f3c79b050148e5511b3cd", {
-                method: "POST",
-                headers: { 
+        onSubmit: (values, { resetForm }) => {
+            fetch('https://formsubmit.co/ajax/verometelico@gmail.com', {
+                method: 'POST',
+                headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
@@ -51,12 +48,24 @@ export default function Obra() {
                     nombre: values.nombre,
                     email: values.email,
                     asunto: values.asunto,
-                    mensaje: values.mensaje
-                })
+                    mensaje: values.mensaje, 
+                    _subject: "Te han enviado un nuevo email a través de tu pagina web."}),
             })
             .then(response => response.json())
-            .then(data => console.log(data))
-            .catch(error => console.log(error));
+            .then(data => {
+                resetForm();
+                setToast({
+                    title: "El email ha sido enviado.", 
+                    duration: 4000,
+                    status: "success"}); 
+                toggleToast(!isToastOpen);
+            })
+            .catch(error => setToast({
+                title: "Ha ocurrido un error el enviar el email.", 
+                duration: 4000, 
+                status: "error"})); 
+            toggleToast(!isToastOpen);
+
         }
     })
     
@@ -73,18 +82,11 @@ export default function Obra() {
             <Header />
 
             <div className="flex flex-col gap-8 text-primary-900 mx-4 my-10 lg:my-24 lg:mx-60">
-                {router.isReady && router.query.q == "success" &&
-                    <div className="flex items-center gap-2 text-green-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>¡Tu mensaje ha sido enviado!</span>
-                    </div>}
-                <form method="POST" action="https://formsubmit.co/46c8e5f4ab3f3c79b050148e5511b3cd" className="flex flex-col gap-4">
+                <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4">
                     <div className="flex flex-col gap-3">
                         <label htmlFor="nombre" className="text-sm">Nombre y Apellido (*)</label>
                         <input 
-                            type="text" 
+                            type="text"
                             id="nombre"
                             className={`border border-primary-700 p-1 lg:p-1.5 focus:outline-none placeholder:text-primary-700 placeholder:text-lg ${formik.errors.nombre && formik.touched.nombre ? "outline outline-1 outline-red-500" : ""}`}
                             {...formik.getFieldProps('nombre')}
@@ -125,18 +127,40 @@ export default function Obra() {
                         {formik.errors.mensaje && formik.touched.mensaje &&
                                 <span className="text-red-500 text-sm" aria-label={formik.errors.mensaje}>{formik.errors.mensaje}</span>}
                     </div>
-                    <input type="hidden" name="_subject" value="Te han enviado un nuevo email a través de tu pagina web."></input>
-                    <input type="hidden" name="_captcha" value="false"></input>
-                    <input type="hidden" name="_next" value="https://verometelico.netlify.app/contacto?q=success"></input>
                     <input type="text" name="_honey" className="hidden"></input>
                     <button 
-                        disabled={!formik.isValid || (Object.keys(formik.touched).length === 0 && formik.touched.constructor === Object)}
+                        type="submit"
+                        disabled={formik.isSubmitting || !formik.isValid || (Object.keys(formik.touched).length === 0 && formik.touched.constructor === Object)}
                         className="bg-secondary-400 text-sm px-5 md:px-6 py-3 mt-4 self-end hover:bg-secondary-200"
-                        type="submit">Enviar</button>
+                        >Enviar</button>
                 </form>
             </div>
 
             <Footer />
+
+            {toast &&
+                <Toast.Provider duration={5000}>
+                    <Toast.Root 
+                        open={isToastOpen}
+                        onOpenChange={toggleToast}
+                        className={`flex items-center py-6 px-8 rounded 
+                                    ${toast.status == "success" ? "bg-green-400 text-primary-700" 
+                                        : toast.status == "error" ? "bg-red-300 text-primary-700" 
+                                        : "bg-primary-900 text-white"}`}>
+                            <Toast.Title className="mr-8">{toast.title}</Toast.Title>
+                            <Toast.Close>
+                                <svg className={`w-6 h-6 rounded
+                                    ${toast.status == "success" ? "hover:bg-green-300" 
+                                        : toast.status == "error" ? "hover:bg-error-200" 
+                                        : "bg-primary-700"}`} 
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </Toast.Close>
+                    </Toast.Root>
+
+                    <Toast.Viewport className="fixed top-0 right-0 m-5" />
+                </Toast.Provider>}
         </>
     );
 }

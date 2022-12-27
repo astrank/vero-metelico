@@ -11,7 +11,7 @@ export default function Footer() {
                     aria-label="Redes Sociales"
                 >
                     <li aria-label="Instagram">
-                        <Link href="#">
+                        <Link href="https://www.instagram.com/veronicametelico/" target="_blank" rel="noreferrer">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 448 512"

@@ -33,9 +33,9 @@ const Login = () => {
 
     return (
         <div
-            className="flex flex-col justify-center text-primary-900 p-4"
+            className="flex flex-col justify-center text-primary-900 p-4 sm:min-w-96"
         >
-            <h1 className="text-4xl font-bold mb-10">
+            <h1 className="text-3xl font-bold mb-10">
                 Ingresa con tu cuenta
             </h1>
             {error && (
