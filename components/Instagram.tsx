@@ -12,7 +12,7 @@ export default function Instagram() {
     const [isMobile, setIsMobile] = useState(typeof window !== "undefined" && window.innerWidth < 768);
     const [instagramData, setInstagramData] = useState<InstagramData[]>([]);
     const url = `https://graph.instagram.com/me/media?fields=id,media_url,caption,permalink&limit=6&access_token=${process.env.NEXT_PUBLIC_INSTAGRAM_TOKEN}`;
-
+    
     useEffect(() => {
         fetch(url, {
             headers: {
