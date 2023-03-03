@@ -1,12 +1,11 @@
 import Head from "next/head";
-import Script from "next/script";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Link from "next/link";
 import { Post } from "../types/Post";
 import { Category } from "../types/Category";
 import { NextPage } from "next";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Instagram from "../components/Instagram";
 
 type ObraProps = {
@@ -14,13 +13,12 @@ type ObraProps = {
     categories: Category[],
 }
 
-declare global {
-    interface Window { google: any; }
-    interface Window { googleTranslateElementInit: any; }
-}
-
 const Obra: NextPage<ObraProps> = ({ posts }) => {
-    const [visiblePosts, editPosts] = useState<Post[]>(posts);
+    const [visiblePosts, setVisiblePosts] = useState<number>(8);
+    
+    const showMorePosts = () => {
+        setVisiblePosts(visiblePosts + 8)
+    }
 
     return (
         <div className="min-h-screen flex flex-col justify-between">
@@ -37,8 +35,8 @@ const Obra: NextPage<ObraProps> = ({ posts }) => {
             <div className="flex flex-col gap-6 text-primary-900 mx-4 my-8 md:mx-10 lg:mx-14 xl:mx-44 mb-auto">
                 <h1 className="font-asap text-3xl">Últimas publicaciones</h1>
                 <div className="flex flex-col gap-4 my-6">
-                    {visiblePosts && visiblePosts.length > 0 && 
-                        visiblePosts.map((post, i) => (
+                    {posts && posts.length > 0 && 
+                        posts.slice(0, visiblePosts).map((post, i) => (
                             <div key={i} className="group flex flex-col gap-3">
                                 <Link href={`/obra/${post.slug}`} className="self-start">
                                     <h2 className="font-asap text-2xl group-hover:text-primary-700">{post.title}</h2>
@@ -63,6 +61,20 @@ const Obra: NextPage<ObraProps> = ({ posts }) => {
                                 </Link>
                             </div>
                         ))}
+                    {visiblePosts < posts.length && <button
+                        className="peer flex self-center items-center gap-1 mt-6 text-secondary-600 hover:text-secondary-400"
+                        onClick={() => showMorePosts()}
+                    >
+                        <span>Mostrar mas</span>
+                        <svg
+                            fill="currentColor"
+                            className="h-3"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 512 512"
+                        >
+                            <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
+                        </svg>
+                    </button>}
                 </div>
             </div>
 

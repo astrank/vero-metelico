@@ -25,7 +25,8 @@ export default function Invitados({ invitados }: InvitadosProps) {
             <div className="flex flex-col gap-6 text-primary-900 mx-4 my-8 md:mx-10 lg:mx-14 xl:mx-44 mb-auto">
                 <div className="flex flex-col gap-6 mb-6">
                     <h1 className="font-asap text-3xl">Espacio para invitados</h1>
-                    <p className="font-roboto font-light text-base text-primary-700 leading-8 text-justify">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi at hic magni ipsa facilis accusamus maxime. Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima consectetur nostrum porro doloribus quis expedita dolorem, ab, veritatis dolores.</p>
+                    <p className="font-roboto font-light text-base text-primary-700 leading-8 text-justify">Este es el Salón de Honor para mis hermanos en la escritura. A quienes leo,  admiro y de quienes aprendo.  
+<br/> Están aquí los que tienen que estar.</p>
                 </div>
                 {invitados.map(invitado => (
                     <div className="group flex flex-col gap-3" key={invitado.slug}>
