@@ -37,8 +37,8 @@ const Nav = ({ categories }: NavTypes) => {
             </svg>
           </Link>
           <ul className="flex flex-col gap-2 ml-4 pt-2 lg:ml-0 lg:absolute lg:hidden lg:peer-hover:flex lg:hover:flex">
-            {categories.map(c => (
-              <li>
+            {categories.map((c, i) => (
+              <li key={i}>
                 <Link className="hover:text-primary-700" href={`/obra?q=${c.name}`}>
                   {c.name}
                 </Link>
