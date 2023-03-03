@@ -65,7 +65,7 @@ const Obra: NextPage<ObraProps> = ({ posts }) => {
                         className="peer flex self-center items-center gap-1 mt-6 text-secondary-600 hover:text-secondary-400"
                         onClick={() => showMorePosts()}
                     >
-                        <span>Mostrar mas</span>
+                        <span>Mostrar más</span>
                         <svg
                             fill="currentColor"
                             className="h-3"
