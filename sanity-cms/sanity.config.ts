@@ -5,7 +5,7 @@ import {schemaTypes} from './schemas'
 
 export default defineConfig({
   name: 'default',
-  title: 'sanity-cms',
+  title: 'Verónica Metélico',
 
   projectId: '2uq09tq9',
   dataset: 'production',

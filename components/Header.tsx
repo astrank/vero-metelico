@@ -124,18 +124,20 @@ export default function Header({categorias}: HeaderProps) {
                                 </svg>
                             </Link>
                             <ul className="flex flex-col gap-2 ml-4 pt-2 lg:ml-0 lg:absolute lg:hidden lg:peer-hover:flex lg:hover:flex bg-white">
-                                {categorias && categorias.map((c, i) => (
-                                    <li key={i}>
-                                        <Link
-                                            className="hover:text-primary-700"
-                                            href={{
-                                                pathname: '/obra',
-                                                query: { q: c.nombre_plural },
-                                            }}
-                                        >
-                                            {c.nombre_plural}
-                                        </Link>
-                                    </li>
+                                {categorias && categorias
+                                    .sort((c1, c2) => c1.nombre_plural.localeCompare(c2.nombre_plural))
+                                    .map((c, i) => (
+                                        <li key={i}>
+                                            <Link
+                                                className="hover:text-primary-700"
+                                                href={{
+                                                    pathname: '/obra',
+                                                    query: { q: c.nombre_plural },
+                                                }}
+                                            >
+                                                {c.nombre_plural}
+                                            </Link>
+                                        </li>
                                 ))}
                             </ul>
                         </li>
