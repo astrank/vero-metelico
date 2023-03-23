@@ -41,6 +41,7 @@ const Obra: NextPage<ObraProps> = ({ posts, categorias }) => {
             })
         } else {
             setObras(posts);
+            setCategoria(null);
         }
     }, [router])
     
