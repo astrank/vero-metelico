@@ -1,13 +1,7 @@
 import { useEffect } from "react";
-import {
-  GetStaticProps,
-  GetStaticPaths,
-  NextPage,
-} from "next";
+import { GetStaticProps, GetStaticPaths, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import Markdown from "react-markdown";
-import invitados from "../../public/data/invitados.json";
 import { useComments } from "../../utils/Comments";
 
 import { GuestPost } from "../../types/GuestPost";
@@ -20,10 +14,11 @@ import Comments from "../../components/Comments";
 import { groq } from "next-sanity";
 import { client } from "../../lib/sanity.client";
 import { Category } from "../../types/Category";
+import { PortableText } from "@portabletext/react";
 
 type InvitadoProps = {
-  invitado: GuestPost,
-  categorias: Category[]
+  invitado: GuestPost;
+  categorias: Category[];
 };
 
 const Invitado: NextPage<InvitadoProps> = ({ invitado, categorias }) => {
@@ -65,11 +60,25 @@ const Invitado: NextPage<InvitadoProps> = ({ invitado, categorias }) => {
         <div className="flex flex-col gap-10 my-6">
           <div>
             <h1 className="font-asap text-3xl mb-6">{invitado.titulo}</h1>
-            <span>Autor: {invitado.autor}</span>
+            {invitado.autor.link ? (
+              <span>
+                Autor:{" "}
+                <Link
+                  href={invitado.autor.link}
+                  className="underline"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {invitado.autor.nombre}
+                </Link>
+              </span>
+            ) : (
+              <span>Autor: {invitado.autor.nombre}</span>
+            )}
           </div>
-          <Markdown className="flex flex-col gap-6 font-roboto font-light leading-7 md:text-lg text-primary-700 text-justify md:leading-8">
-            {invitado.cuerpo}
-          </Markdown>
+          <div className="flex flex-col gap-6 font-roboto font-light leading-7 md:text-lg text-primary-700 text-justify md:leading-8">
+            <PortableText value={invitado.cuerpo} />
+          </div>
         </div>
 
         <span className="mt-8 font-bold">Comentarios ({comments?.length})</span>
@@ -108,43 +117,46 @@ const Invitado: NextPage<InvitadoProps> = ({ invitado, categorias }) => {
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-    const query = groq`*[
-        _type == "invitado" &&
+  const query = groq`*[
+        _type == "obras_invitados" &&
         (slug.current in path("${context.params?.slug}")) &&
         !(_id in path('drafts.**'))]{
             titulo,
             slug,
             cuerpo,
             fecha,
-            autor,
-            autor_link,
-            categoria
+            autor->{
+              nombre,
+              link
+            },
     }`;
-    const categorias_q = groq`*[_type == "categoria" && !(_id in path('drafts.**'))]{
+  const categorias_q = groq`*[_type == "categoria" && !(_id in path('drafts.**'))]{
         nombre_plural,
         nombre_singular
     }`;
-    const invitado: GuestPost[] = await client.fetch(query);
-    const categorias = await client.fetch(categorias_q);
+  const invitado: GuestPost[] = await client.fetch(query);
+  const categorias = await client.fetch(categorias_q);
 
-    return {
-        props: {
-            invitado: invitado[0],
-
-        },
-    };
+  return {
+    props: {
+      invitado: invitado[0],
+      categorias: categorias,
+    },
+  };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    const query = groq`*[_type == "invitado" && !(_id in path('drafts.**'))]{
+  const query = groq`*[_type == "obras_invitados" && !(_id in path('drafts.**'))]{
         slug,
     }`;
-    const invitados: GuestPost[] = await client.fetch(query);
+  const invitados: GuestPost[] = await client.fetch(query);
 
-    return {
-        paths: invitados.map((invitado) => ({ params: { slug: invitado.slug.current } })),
-        fallback: false,
-    };
+  return {
+    paths: invitados.map((invitado) => ({
+      params: { slug: invitado.slug.current },
+    })),
+    fallback: false,
+  };
 };
 
-export default GuestPost;
+export default Invitado;

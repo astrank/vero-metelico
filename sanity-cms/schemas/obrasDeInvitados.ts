@@ -26,7 +26,7 @@ export default defineType({
         description: 'El slug es un fragmento de texto unico (sin tildes) separado por guiones que va a ser usado en el URL para identificar esta página. "primer-cuento" es el slug de veronicametelico.com/obra/primer-cuento'
     }),
     defineField({
-      name: 'autores_invitados',
+      name: 'autor',
       title: 'Autor',
       type: 'reference',
       to: [{type: 'autores_invitados'}],

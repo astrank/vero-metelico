@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { GetStaticProps, GetStaticPaths, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import Markdown from "react-markdown";
 import { useComments } from "../../utils/Comments";
 
 import { Post } from "../../types/Post";
@@ -87,7 +86,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
             slug,
             cuerpo,
             fecha,
-            categoria
     }`;
     const categorias_q = groq`*[_type == "categoria" && !(_id in path('drafts.**'))]{
         nombre_plural,

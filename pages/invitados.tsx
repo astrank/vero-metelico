@@ -10,13 +10,16 @@ import { Category } from "../types/Category";
 
 import { groq } from "next-sanity";
 import { client } from "../lib/sanity.client";
+import { useEffect } from "react";
+import { PortableText } from "@portabletext/react";
 
 type InvitadosProps = {
-    invitados: GuestPost[],
+    obras: GuestPost[],
     categorias: Category[]
 }
 
-export default function Invitados({ invitados, categorias }: InvitadosProps) {
+export default function Invitados({ obras, categorias }: InvitadosProps) {
+    useEffect(() => console.log(obras[0]))
     return (
         <div className="min-h-screen flex flex-col justify-between">
             <Head>
@@ -35,24 +38,29 @@ export default function Invitados({ invitados, categorias }: InvitadosProps) {
                     <p className="font-roboto font-light text-base text-primary-700 leading-8 text-justify">Este es el Salón de Honor para mis hermanos en la escritura. A quienes leo,  admiro y de quienes aprendo.  
                     <br/> Están aquí los que tienen que estar.</p>
                 </div>
-                {invitados && invitados
+                {obras && obras
                     .sort((p1, p2) => Date.parse(p2.fecha) - Date.parse(p1.fecha))
-                    .map(invitado => (
-                        <div className="group flex flex-col gap-3" key={invitado.slug.current}>
-                            <div className="self-start">
-                                <Link href={`/invitados/${invitado.slug}`}>
-                                    <h2 className="font-asap text-2xl group-hover:text-primary-700 mb-2">{invitado.titulo}</h2>
-                                </Link>
-                                <Link href={invitado.autor_link ? invitado.autor_link : "#"}>
-                                    <span>Autor: {invitado.autor}</span>
+                    .map(obra => (
+                        <div className="flex flex-col gap-3" key={obra.slug.current}>
+                            <Link href={`/invitados/${obra.slug.current}`} className="group flex flex-col gap-3 self-start">
+                                <h2 className="font-asap text-2xl group-hover:text-primary-700 mb-2">{obra.titulo}</h2>
+                                <div className="font-roboto font-light text-md text-primary-700 leading-8 text-justify">
+                                    <PortableText value={obra.introduction} />
+                                </div>
+                            </Link>
+                            <div className="flex justify-between items-center">
+                                {obra.autor.link ?
+                                        <span>Autor: <Link href={obra.autor.link} className="underline" target="_blank" rel="noreferrer">
+                                                {obra.autor.nombre}
+                                            </Link></span> :
+                                        <span>Autor: {obra.autor.nombre}</span>}
+                                <Link className="flex gap-2 items-center justify-end text-sm text-secondary-600 hover:text-secondary-400" href={`/invitados/${obra.slug.current}`}>
+                                    <span>Seguir leyendo</span>
+                                    <svg className="w-4 h-4 mt-0.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                                    </svg>
                                 </Link>
                             </div>
-                            <Link className="flex gap-2 items-center justify-end text-sm text-secondary-600 hover:text-secondary-400" href={`/invitados/${invitado.slug}`}>
-                                <span>Seguir leyendo</span>
-                                <svg className="w-4 h-4 mt-0.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                                </svg>
-                            </Link>
                         </div>))}
             </div>
 
@@ -70,8 +78,12 @@ export const getStaticProps = async () => {
         titulo,
         slug,
         cuerpo,
-        autores_invitados,
+        autor->{
+            nombre,
+            link
+        },
         fecha,
+        introduction,
         categoria->{
             nombre_plural,
             nombre_singular
@@ -86,7 +98,7 @@ export const getStaticProps = async () => {
     const categorias = await client.fetch(categorias_q);
 
     return { props: { 
-        obras_invitados: obras_invitados,
+        obras: obras_invitados,
         categorias: categorias
     } };
 };
