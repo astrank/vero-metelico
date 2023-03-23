@@ -15,8 +15,13 @@ import {
 } from "firebase/firestore";
 import { initializeFirebase } from "../utils/Firebase";
 import { Unsubscribe } from "firebase/auth";
+import { Category } from "../types/Category";
 
-export default function Header() {
+type HeaderProps = {
+    categorias: Category[]
+}
+
+export default function Header({categorias}: HeaderProps) {
     const [isNavToggled, toggleNav] = useState(false);
     const { user, logout } = useAuth();
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -119,30 +124,19 @@ export default function Header() {
                                 </svg>
                             </Link>
                             <ul className="flex flex-col gap-2 ml-4 pt-2 lg:ml-0 lg:absolute lg:hidden lg:peer-hover:flex lg:hover:flex">
-                                <li>
-                                    <Link
-                                        className="hover:text-primary-700"
-                                        href="/cuentos"
-                                    >
-                                        Cuentos
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        className="hover:text-primary-700"
-                                        href="/reflexiones"
-                                    >
-                                        Reflexiones
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        className="hover:text-primary-700"
-                                        href="/poesia"
-                                    >
-                                        Poesía
-                                    </Link>
-                                </li>
+                                {categorias && categorias.map((c, i) => (
+                                    <li key={i}>
+                                        <Link
+                                            className="hover:text-primary-700"
+                                            href={{
+                                                pathname: '/obra',
+                                                query: { q: c.nombre_plural },
+                                            }}
+                                        >
+                                            {c.nombre_plural}
+                                        </Link>
+                                    </li>
+                                ))}
                             </ul>
                         </li>
                         <li>

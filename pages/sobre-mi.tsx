@@ -1,43 +1,17 @@
-import { useEffect, useRef, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Instagram from "../components/Instagram";
+import { Category } from "../types/Category";
+import { groq } from "next-sanity";
+import { client } from "../lib/sanity.client";
 
-export default function SobreMi() {
-    /* const [showingTranslation, toggleShowingTranslation] = useState(false);
-    let translate = false;
-    const firstRender = useRef(true);
+type SobreMiProps = {
+    categorias: Category[]
+}
 
-    const googleTranslateElementInit = () => {
-        if(!translate) {
-            new window.google.translate.TranslateElement({
-                pageLanguage: "es",
-                autoDisplay: false
-            }, "google_translate_element");
-
-            translate = true;
-        }
-    };
-
-    useEffect(() => {
-        if (firstRender.current) {
-            firstRender.current = false;
-            return;
-        }
-        
-        if(!translate) {
-            var addScript = document.createElement("script");
-            addScript.setAttribute(
-            "src",
-            "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
-            );
-            document.body.appendChild(addScript);
-            window.googleTranslateElementInit = googleTranslateElementInit;
-        }
-    }, []); */
-
+export default function SobreMi({categorias}: SobreMiProps) {
     return (
         <div className="min-h-screen text-primary-700">
             <Head>
@@ -48,7 +22,7 @@ export default function SobreMi() {
                 />
             </Head>
 
-            <Header />
+            <Header categorias={categorias} />
 
             <section className="flex flex-col-reverse gap-10 mx-4 h-full my-10 lg:gap-20 lg:my-20 lg:flex-row md:mx-10 lg:mx-14 xl:mx-44">
                 <div className="relative w-full h-96 lg:h-auto lg:w-5/12">
@@ -103,3 +77,18 @@ export default function SobreMi() {
         </div>
     );
 }
+
+export const getStaticProps = async () => {
+    const categorias_q = groq`*[_type == "categoria" && !(_id in path('drafts.**'))]{
+        nombre_plural,
+        nombre_singular
+    }`;
+
+    const categorias = await client.fetch(categorias_q);
+
+    return { 
+        props: { 
+            categorias: categorias
+        } 
+    };
+};

@@ -1,3 +1,4 @@
 export type Category = {
-    name: string,
+    nombre_singular: string,
+    nombre_plural: string,
 }

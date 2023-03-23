@@ -6,8 +6,15 @@ import * as Yup from "yup";
 import { useState } from "react";
 import * as Toast from "@radix-ui/react-toast";
 import { ToastType } from "../types/Toast";
+import { Category } from "../types/Category";
+import { groq } from "next-sanity";
+import { client } from "../lib/sanity.client";
 
-export default function Contacto() {
+type ContactoProps = {
+    categorias: Category[]
+}
+
+export default function Contacto({categorias}: ContactoProps) {
     const [toast, setToast] = useState<ToastType | false>(false);
     const [isToastOpen, toggleToast] = useState<boolean>(false);
 
@@ -79,7 +86,7 @@ export default function Contacto() {
                 />
             </Head>
 
-            <Header />
+            <Header categorias={categorias} />
 
             <div className="flex flex-col gap-8 text-primary-900 mx-4 my-10 lg:my-24 lg:mx-60">
                 <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4">
@@ -164,3 +171,18 @@ export default function Contacto() {
         </>
     );
 }
+
+export const getStaticProps = async () => {
+    const categorias_q = groq`*[_type == "categoria" && !(_id in path('drafts.**'))]{
+        nombre_plural,
+        nombre_singular
+    }`;
+
+    const categorias = await client.fetch(categorias_q);
+
+    return { 
+        props: { 
+            categorias: categorias
+        } 
+    };
+};

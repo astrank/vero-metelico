@@ -3,7 +3,6 @@ import { GetStaticProps, GetStaticPaths, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import Markdown from "react-markdown";
-import posts from "../../public/data/posts.json";
 import { useComments } from "../../utils/Comments";
 
 import { Post } from "../../types/Post";
@@ -13,15 +12,21 @@ import Footer from "../../components/Footer";
 import CommentInput from "../../components/CommentInput";
 import Comments from "../../components/Comments";
 
+import { groq } from "next-sanity";
+import { client } from "../../lib/sanity.client";
+import {PortableText} from '@portabletext/react'
+import { Category } from "../../types/Category";
+
 type ObraProps = {
     post: Post,
+    categorias: Category[]
 }
 
-const Obra: NextPage<ObraProps> = ({ post }) => {
-    const { comments, getComments, getAllComments, unsubscribe } = useComments();
+const Obra: NextPage<ObraProps> = ({ post, categorias }) => {
+    const { comments, getComments, unsubscribe } = useComments();
 
     useEffect(() => {
-        getComments(post.slug);
+        getComments(post.slug.current);
 
         return () => {unsubscribe && unsubscribe()}
     }, [])
@@ -29,7 +34,7 @@ const Obra: NextPage<ObraProps> = ({ post }) => {
     return (
         <div className="min-h-screen max-w-screen overflow-hidden">
             <Head>
-                <title>{`${post.title} | Verónica Metélico`}</title>
+                <title>{`${post.titulo} | Verónica Metélico`}</title>
                 <meta
                     name="description"
                     content="Cuentos y Reflexiones | Verónica Metélico"
@@ -37,7 +42,7 @@ const Obra: NextPage<ObraProps> = ({ post }) => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <Header />
+            <Header categorias={categorias} />
 
             <div className="flex flex-col gap-2 text-primary-900 my-10 mx-4 md:mx-10 lg:mx-14 lg:my-20 lg:mx-44">
                 <Link href="/obra" className="flex gap-2 items-center text-sm">
@@ -47,14 +52,14 @@ const Obra: NextPage<ObraProps> = ({ post }) => {
                     <span>Volver a Obra</span>
                 </Link>
                 <div className="flex flex-col gap-10 my-6">
-                    <h1 className="font-asap text-3xl">{post.title}</h1>
-                    <Markdown className="flex flex-col gap-6 font-roboto font-light leading-7 md:text-lg text-primary-700 text-justify md:leading-8">
-                        {post.content}
-                    </Markdown>
+                    <h1 className="font-asap text-3xl">{post.titulo}</h1>
+                    <div className="flex flex-col gap-6 font-roboto font-light leading-7 md:text-lg text-primary-700 text-justify md:leading-8">
+                        <PortableText value={post.cuerpo} />
+                    </div>
                 </div>
 
                 <span className='mt-8 font-bold'>Comentarios ({comments?.length})</span>
-                <CommentInput slug={post.slug} title={post.title} />
+                <CommentInput slug={post.slug.current} title={post.titulo} />
                 <div className="flex flex-col gap-6">
                     {comments && comments.length > 0 &&
                         comments
@@ -73,19 +78,40 @@ const Obra: NextPage<ObraProps> = ({ post }) => {
     );
 }
 
-export const getStaticProps: GetStaticProps = (context) => {
-    const post = posts.find((post) => post.slug === context.params?.slug)
-   
+export const getStaticProps: GetStaticProps = async (context) => {
+    const query = groq`*[
+        _type == "obra" &&
+        (slug.current in path("${context.params?.slug}")) &&
+        !(_id in path('drafts.**'))]{
+            titulo,
+            slug,
+            cuerpo,
+            fecha,
+            categoria
+    }`;
+    const categorias_q = groq`*[_type == "categoria" && !(_id in path('drafts.**'))]{
+        nombre_plural,
+        nombre_singular
+    }`;
+    const post: Post[] = await client.fetch(query);
+    const categorias = await client.fetch(categorias_q);
+
     return {
         props: {
-            post: post,
+            post: post[0],
+            categorias: categorias
         },
     };
 };
 
-export const getStaticPaths: GetStaticPaths = () => {
+export const getStaticPaths: GetStaticPaths = async () => {
+    const query = groq`*[_type == "obra" && !(_id in path('drafts.**'))]{
+        slug,
+    }`;
+    const posts: Post[] = await client.fetch(query);
+
     return {
-        paths: posts.map((post) => ({ params: { slug: post.slug } })),
+        paths: posts.map((post) => ({ params: { slug: post.slug.current } })),
         fallback: false,
     };
 };

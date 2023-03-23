@@ -10,22 +10,27 @@ import Markdown from "react-markdown";
 import invitados from "../../public/data/invitados.json";
 import { useComments } from "../../utils/Comments";
 
-import { Invitado } from "../../types/Invitado";
+import { GuestPost } from "../../types/GuestPost";
 
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import CommentInput from "../../components/CommentInput";
 import Comments from "../../components/Comments";
 
+import { groq } from "next-sanity";
+import { client } from "../../lib/sanity.client";
+import { Category } from "../../types/Category";
+
 type InvitadoProps = {
-  invitado: Invitado,
+  invitado: GuestPost,
+  categorias: Category[]
 };
 
-const Invitado: NextPage<InvitadoProps> = ({ invitado }) => {
+const Invitado: NextPage<InvitadoProps> = ({ invitado, categorias }) => {
   const { comments, getComments, unsubscribe } = useComments();
 
   useEffect(() => {
-    getComments(invitado.slug);
+    getComments(invitado.slug.current);
 
     return () => {
       unsubscribe && unsubscribe();
@@ -35,7 +40,7 @@ const Invitado: NextPage<InvitadoProps> = ({ invitado }) => {
   return (
     <div className="min-h-screen">
       <Head>
-        <title>{`${invitado.title} | Verónica Metélico`}</title>
+        <title>{`${invitado.titulo} | Verónica Metélico`}</title>
         <meta
           name="description"
           content="Cuentos y Reflexiones | Verónica Metélico"
@@ -43,7 +48,7 @@ const Invitado: NextPage<InvitadoProps> = ({ invitado }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header />
+      <Header categorias={categorias} />
 
       <div className="flex flex-col gap-2 text-primary-900 my-10 mx-4 md:mx-10 lg:mx-14 lg:my-20 lg:mx-44">
         <Link href="/invitados" className="flex gap-2 items-center text-sm">
@@ -59,16 +64,16 @@ const Invitado: NextPage<InvitadoProps> = ({ invitado }) => {
         </Link>
         <div className="flex flex-col gap-10 my-6">
           <div>
-            <h1 className="font-asap text-3xl mb-6">{invitado.title}</h1>
-            <span>Autor: {invitado.author}</span>
+            <h1 className="font-asap text-3xl mb-6">{invitado.titulo}</h1>
+            <span>Autor: {invitado.autor}</span>
           </div>
           <Markdown className="flex flex-col gap-6 font-roboto font-light leading-7 md:text-lg text-primary-700 text-justify md:leading-8">
-            {invitado.content}
+            {invitado.cuerpo}
           </Markdown>
         </div>
 
         <span className="mt-8 font-bold">Comentarios ({comments?.length})</span>
-        <CommentInput slug={invitado.slug} title={invitado.title} />
+        <CommentInput slug={invitado.slug.current} title={invitado.titulo} />
         <div className="flex flex-col gap-6">
           {comments &&
             comments.length > 0 &&
@@ -102,21 +107,44 @@ const Invitado: NextPage<InvitadoProps> = ({ invitado }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = (context) => {
-  const invitado = invitados.find((invitado) => invitado.slug === context.params?.slug);
+export const getStaticProps: GetStaticProps = async (context) => {
+    const query = groq`*[
+        _type == "invitado" &&
+        (slug.current in path("${context.params?.slug}")) &&
+        !(_id in path('drafts.**'))]{
+            titulo,
+            slug,
+            cuerpo,
+            fecha,
+            autor,
+            autor_link,
+            categoria
+    }`;
+    const categorias_q = groq`*[_type == "categoria" && !(_id in path('drafts.**'))]{
+        nombre_plural,
+        nombre_singular
+    }`;
+    const invitado: GuestPost[] = await client.fetch(query);
+    const categorias = await client.fetch(categorias_q);
 
-  return {
-    props: {
-      invitado: invitado,
-    },
-  };
+    return {
+        props: {
+            invitado: invitado[0],
+
+        },
+    };
 };
 
-export const getStaticPaths: GetStaticPaths = () => {
-  return {
-    paths: invitados.map((invitado) => ({ params: { slug: invitado.slug } })),
-    fallback: false,
-  };
+export const getStaticPaths: GetStaticPaths = async () => {
+    const query = groq`*[_type == "invitado" && !(_id in path('drafts.**'))]{
+        slug,
+    }`;
+    const invitados: GuestPost[] = await client.fetch(query);
+
+    return {
+        paths: invitados.map((invitado) => ({ params: { slug: invitado.slug.current } })),
+        fallback: false,
+    };
 };
 
-export default Invitado;
+export default GuestPost;

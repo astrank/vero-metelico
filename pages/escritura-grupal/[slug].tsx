@@ -6,17 +6,22 @@ import Markdown from "react-markdown";
 import escrituras from "../../public/data/escritura-grupal.json";
 import { useAuth } from "../../utils/Auth";
 
-import { EscrituraGrupal as EscrituraGrupalType } from "../../types/EscrituraGrupal";
+import { GroupWriting as EscrituraGrupalType } from "../../types/GroupWriting";
 import { useEscrituraGrupal } from "../../utils/EscrituraGrupal";
 
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
+import { Category } from "../../types/Category";
+import { groq } from "next-sanity";
+import { client } from "../../lib/sanity.client";
+
 type EscrituraGrupalProps = {
   escritura: EscrituraGrupalType,
+  categorias: Category[]
 };
 
-const EscrituraGrupal: NextPage<EscrituraGrupalProps> = ({ escritura }) => {
+const EscrituraGrupal: NextPage<EscrituraGrupalProps> = ({ escritura, categorias }) => {
   const { getStories, postStory, approveStory, unsubscribe, stories } = useEscrituraGrupal();
   const [fragment, setFragment] = useState<string>("");
   const { user, isAdmin } = useAuth();
@@ -47,7 +52,7 @@ const EscrituraGrupal: NextPage<EscrituraGrupalProps> = ({ escritura }) => {
         />
       </Head>
 
-      <Header />
+      <Header categorias={categorias} />
 
       <section className="flex flex-col gap-10 mt-10 mx-4 md:mx-10 lg:mx-14 lg:my-20 lg:mx-44">
           <div className="flex justify-between">
@@ -110,12 +115,18 @@ const EscrituraGrupal: NextPage<EscrituraGrupalProps> = ({ escritura }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = (context) => {
+export const getStaticProps: GetStaticProps = async (context) => {
   const escritura = escrituras.find((escritura) => escritura.slug === context.params?.slug);
+  const categorias_q = groq`*[_type == "categoria" && !(_id in path('drafts.**'))]{
+        nombre_plural,
+        nombre_singular
+    }`;
+  const categorias = await client.fetch(categorias_q);
 
   return {
     props: {
       escritura: escritura,
+      categorias: categorias
     },
   };
 };

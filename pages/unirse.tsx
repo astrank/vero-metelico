@@ -1,13 +1,20 @@
-import Head from 'next/head'
 import { useState, useRef, useEffect } from "react";
-import { useAuth } from "../utils/Auth";
+import Head from 'next/head'
 import router from "next/router";
+import { useAuth } from "../utils/Auth";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { Category } from "../types/Category";
+import { groq } from "next-sanity";
+import { client } from "../lib/sanity.client";
 
-export default function SignUp() {
+type SignUpProps = {
+    categorias: Category[]
+}
+
+export default function SignUp({categorias}: SignUpProps) {
     const firstRender = useRef(true);
     const [error, setError] = useState("");
     const { signup, user, updateUser } = useAuth();
@@ -72,7 +79,7 @@ export default function SignUp() {
                 />
             </Head>
 
-            <Header />
+            <Header categorias={categorias} />
 
             <div className="h-full font-roboto text-primary-900">
                 <form onSubmit={formik.handleSubmit} className="flex flex-col flex items-start w-96 mx-auto my-28">
@@ -134,3 +141,18 @@ export default function SignUp() {
         </>
     );
 }
+
+export const getStaticProps = async () => {
+    const categorias_q = groq`*[_type == "categoria" && !(_id in path('drafts.**'))]{
+        nombre_plural,
+        nombre_singular
+    }`;
+
+    const categorias = await client.fetch(categorias_q);
+
+    return { 
+        props: { 
+            categorias: categorias
+        } 
+    };
+};

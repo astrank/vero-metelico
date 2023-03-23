@@ -1,4 +1,4 @@
-export type EscrituraGrupal = {
+export type GroupWriting = {
     id: string,
     authorName: string,
     authorId: string,

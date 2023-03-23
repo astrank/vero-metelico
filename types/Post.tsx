@@ -1,7 +1,12 @@
+import { Category } from "../types/Category";
+
 export type Post = {
-    title: string,
-    content: string,
-    category: string,
-    slug: string
-    publish_date: string,
+    titulo: string,
+    cuerpo: [],
+    categoria: Category,
+    introduction: [],
+    slug: {
+        current: string,
+    },
+    fecha: string,
 }

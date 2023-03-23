@@ -1,15 +1,22 @@
 import Head from "next/head";
 import Link from "next/link";
+
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Instagram from "../components/Instagram";
-import { Invitado } from "../types/Invitado"
+
+import { GuestPost } from "../types/GuestPost"
+import { Category } from "../types/Category";
+
+import { groq } from "next-sanity";
+import { client } from "../lib/sanity.client";
 
 type InvitadosProps = {
-    invitados: Invitado[]
+    invitados: GuestPost[],
+    categorias: Category[]
 }
 
-export default function Invitados({ invitados }: InvitadosProps) {
+export default function Invitados({ invitados, categorias }: InvitadosProps) {
     return (
         <div className="min-h-screen flex flex-col justify-between">
             <Head>
@@ -20,40 +27,33 @@ export default function Invitados({ invitados }: InvitadosProps) {
                 />
             </Head>
 
-            <Header />
+            <Header categorias={categorias} />
 
             <div className="flex flex-col gap-6 text-primary-900 mx-4 my-8 md:mx-10 lg:mx-14 xl:mx-44 mb-auto">
                 <div className="flex flex-col gap-6 mb-6">
                     <h1 className="font-asap text-3xl">Espacio para invitados</h1>
                     <p className="font-roboto font-light text-base text-primary-700 leading-8 text-justify">Este es el Salón de Honor para mis hermanos en la escritura. A quienes leo,  admiro y de quienes aprendo.  
-<br/> Están aquí los que tienen que estar.</p>
+                    <br/> Están aquí los que tienen que estar.</p>
                 </div>
-                {invitados.map(invitado => (
-                    <div className="group flex flex-col gap-3" key={invitado.slug}>
-                        <Link href={`/invitados/${invitado.slug}`} className="self-start">
-                            <h2 className="font-asap text-2xl group-hover:text-primary-700 mb-2">{invitado.title}</h2>
-                            <span>Autor: {invitado.author}</span>
-                        </Link>
-                        <Link href={`/invitados/${invitado.slug}`}>
-                            <p className="font-roboto font-light text-md text-primary-700 leading-8 md:hidden text-justify">
-                                {invitado.content
-                                    .split(" ")
-                                    .slice(0, 15)
-                                    .join(" ")}...</p>
-                            <p className="font-roboto font-light text-md text-primary-700 leading-8 hidden md:block text-justify">
-                                {invitado.content
-                                    .split(" ")
-                                    .slice(0, 35)
-                                    .join(" ")}...</p>
-                        </Link>
-                        <Link className="flex gap-2 items-center justify-end text-sm text-secondary-600 hover:text-secondary-400" href={`/invitados/${invitado.slug}`}>
-                            <span>Seguir leyendo</span>
-                            <svg className="w-4 h-4 mt-0.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                            </svg>
-                        </Link>
-                    </div>
-                ))}
+                {invitados && invitados
+                    .sort((p1, p2) => Date.parse(p2.fecha) - Date.parse(p1.fecha))
+                    .map(invitado => (
+                        <div className="group flex flex-col gap-3" key={invitado.slug.current}>
+                            <div className="self-start">
+                                <Link href={`/invitados/${invitado.slug}`}>
+                                    <h2 className="font-asap text-2xl group-hover:text-primary-700 mb-2">{invitado.titulo}</h2>
+                                </Link>
+                                <Link href={invitado.autor_link ? invitado.autor_link : "#"}>
+                                    <span>Autor: {invitado.autor}</span>
+                                </Link>
+                            </div>
+                            <Link className="flex gap-2 items-center justify-end text-sm text-secondary-600 hover:text-secondary-400" href={`/invitados/${invitado.slug}`}>
+                                <span>Seguir leyendo</span>
+                                <svg className="w-4 h-4 mt-0.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                                </svg>
+                            </Link>
+                        </div>))}
             </div>
 
             <section className="mt-14">
@@ -66,11 +66,27 @@ export default function Invitados({ invitados }: InvitadosProps) {
 }
 
 export const getStaticProps = async () => {
-    const invitados = await import("../public/data/invitados.json").then(
-        (res) => res.default
-    );
+    const obras_invitados_q = groq`*[_type == "obras_invitados" && !(_id in path('drafts.**'))]{
+        titulo,
+        slug,
+        cuerpo,
+        autores_invitados,
+        fecha,
+        categoria->{
+            nombre_plural,
+            nombre_singular
+        }
+    }`;
+    const categorias_q = groq`*[_type == "categoria" && !(_id in path('drafts.**'))]{
+        nombre_plural,
+        nombre_singular
+    }`;
 
-    return {
-        props: { invitados },
-    };
+    const obras_invitados = await client.fetch(obras_invitados_q);
+    const categorias = await client.fetch(categorias_q);
+
+    return { props: { 
+        obras_invitados: obras_invitados,
+        categorias: categorias
+    } };
 };

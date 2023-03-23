@@ -2,7 +2,7 @@ import React, { useState, useContext, createContext } from "react";
 import { getFirestore, collection, setDoc, addDoc, onSnapshot, doc, getDocs, query, arrayUnion, arrayRemove, deleteDoc, updateDoc, where } from "firebase/firestore";
 import { initializeFirebase } from "./Firebase";
 import { useAuth } from "./Auth";
-import { EscrituraGrupal as EscrituraGrupalType } from "../types/EscrituraGrupal";
+import { GroupWriting as EscrituraGrupalType } from "../types/GroupWriting";
 import { Unsubscribe } from "firebase/auth";
 
 const app = initializeFirebase();
