@@ -157,7 +157,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
     paths: invitados.map((invitado) => ({
       params: { slug: invitado.slug.current },
     })),
-    revalidate: 60,
     fallback: false,
   };
 };
