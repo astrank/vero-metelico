@@ -55,7 +55,7 @@ const Home: NextPage = () => {
                                         <li>
                                             <Link
                                                 className="hover:text-primary-700"
-                                                href="/cuentos"
+                                                href="/obra?q=Cuentos"
                                             >
                                                 Cuentos
                                             </Link>
@@ -63,9 +63,17 @@ const Home: NextPage = () => {
                                         <li>
                                             <Link
                                                 className="hover:text-primary-700"
-                                                href="/reflexiones"
+                                                href="/obra?q=Reflexiones"
                                             >
                                                 Reflexiones
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link
+                                                className="hover:text-primary-700"
+                                                href="/obra?q=Poesía"
+                                            >
+                                                Poesía
                                             </Link>
                                         </li>
                                     </ul>
